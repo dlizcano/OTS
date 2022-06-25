@@ -1,0 +1,504 @@
+---
+title: "Occupancy Modeling Workshop"
+subtitle: "OTS 2022"
+author: "Diego J. Lizcano, Ph.D."
+institute: "SCMAS, Awake-Travel"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "macros.js"
+---
+
+
+
+```{r xaringan-tile-view, echo=FALSE}
+xaringanExtra::use_tile_view()
+```
+
+```{r xaringanExtra-freezeframe, echo=FALSE}
+xaringanExtra::use_freezeframe()
+```
+
+```{r xaringanExtra-clipboard, echo=FALSE}
+xaringanExtra::use_clipboard()
+```
+
+
+background-image: url(http://tropicalstudies.org/wp-content/uploads/2019/01/logo.png)
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(fontawesome)
+```
+
+
+---
+class: center, middle
+
+# Thanks to
+
+## Adriana Bravo
+## Pablo Muñoz
+## Sofía Rodríguez-Brenes
+
+---
+class: inverse, center, middle
+
+# Get Started
+
+---
+class: inverse, center
+
+# Diego J. Lizcano
+
+![:scale 40%](http://dlizcano.github.io/images/bio-photo5.jpg)
+
+--
+
+- Biologist. Universidad de los Andes, Bogotá-Colombia.
+
+--
+
+- Ph.D. University of Kent, Canterbury, UK.
+
+--
+
+- Ecology and conservation of mammals (Tapirs).
+
+---
+class: inverse, center, middle
+
+# Now You...
+
+---
+
+# In this workshop:
+
+We are going to use 
+![:scale 30%](https://www.r-project.org/logo/Rlogo.png)
+
+And strongly recommended to use ![:scale 30%](https://www.rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png)
+
+
+
+---
+class: center, top, inverse
+
+# Ecology
+### Charles Krebs
+![](https://www.zoology.ubc.ca/~krebs/images/charley_cleth.jpg)
+
+
+---
+
+# Ecology: Study of interactions that determine **Distribution and Abundance**
+
+
+.left-column[
+![](img/ecology.jpg)
+]
+
+.right-column[
+### Distribution:
+
+Where are they. 
+
+### Abundance:
+
+How many?.
+
+
+]
+
+--
+
+Related to the problem of counting organisms!
+
+--
+
+---
+
+# Counting animals is not a trivial problem...
+
+![](https://media.giphy.com/media/11aqMcSy5tsgow/giphy.gif)
+
+Animals move!
+
+---
+
+### As ecologist: The map of our dreams
+
+![Mapa de densidad](img/kanguro.png)
+
+#### at some point, we had to count the kangaroos
+
+---
+
+# Conting Animals
+
+![Obtener densidad](img/pinguinos.jpg)
+
+#### Easy for animals that are conspicuous and that group together.
+
+---
+
+# Conting Animals
+
+![Obtener densidad](img/432.jpg)
+#### Not so easy if they don't group. Capture - Mark - Recapture. Distance
+
+---
+
+# Conting Animals
+
+![Obtener densidad](img/Moose-capture_011.jpg)
+
+#### For some species it is cumbersome, impractical and very expensive.
+
+---
+
+### Relative abundance
+
+![:scale 80%](img/bird_abundance.jpg)
+
+#### An indicator variable of the state of the population 
+
+I don't know how many there are, but I do know where there are more and where there are less.
+
+---
+
+# However...
+
+![:scale 80%](http://i.giphy.com/nejXhE8hnCiQ0.gif)
+#### Animals move and hide (camouflage)
+
+---
+class: center
+# Sampling is not infallible
+
+![:scale 120%](https://i.giphy.com/media/piPn7Cv4KmlVbOSa5c/giphy.webp)
+
+Biologist are not super heroes. We make mistakes!
+
+#### Detectability and Imperfect detection concept
+
+---
+
+# Detectability depends of
+
+--
+
+## 1. Sampling conditions (weather, time).
+
+--
+
+## 2. The ability of the observer (sensor).
+
+--
+
+## 3. The biology of the species being sampled.
+
+--
+
+### This error should be considered carefully to avoid bias in abundance estimates.
+
+---
+
+# How the detection error occurs (Guillera‐Arroita 2016)
+
+see ppt ![:scale 70%](img/detection.png)
+
+##### It is an important error that must be considered in the sampling design!!!
+
+---
+
+# Mackenzie et al 2002, 2003 to the rescue
+
+![](img/mackenzie.png)
+unnoticed...
+
+---
+
+# Book and presence program 2006
+
+.left-column[
+![Mackenzie book](img/mackenziebook.jpg)
+]
+
+.right-column[
+![presence
+software](http://www.mbr-pwrc.usgs.gov/software/doc/presence/falsePos.jpg)
+]
+
+
+Mackenzie popularizes occupancy $(\psi)$ as a proxy of abundance taking into account detectability  $(p)$
+
+
+
+---
+
+## Allows you to set goals and to monitor them over time.
+
+![meta](img/meta.png)
+
+---
+class: inverse, middle, center
+
+## Occupancy 
+# $$\psi$$
+
+## Detection probability 
+
+# $$p$$
+
+### Occupancy is a reflection of other important population parameters such as density.
+
+
+---
+
+
+
+## 1.  $(\psi)$ is the proportion of the sampled area that is occupied by the species.
+
+
+## 2.  By visiting the site several times I can be more sure that I detect the species when it is found in that place.
+
+
+## 3.  **Repeated sampling** are key.
+
+
+## $(\psi)$ It is influenced by environmental variables (**Covariables**) such as vegetation cover, altitude, precipitation, etc.
+
+
+
+---
+
+# This is what a data table with repeated sampling should look like
+
+
+
+```{r eval=TRUE, echo=FALSE, warning=FALSE}
+library(knitr)
+muestreo<-c("visit1","visit2", "visit3", "visit4")
+Sitio<-c("site1", "site2", "site3", "sitex")
+mat<-matrix(c(1,0,1,0,
+              0,0,1,0,
+              0,0,0,0,
+              1,0,0,0),nrow=4,ncol = 4)
+colnames(mat)<-muestreo
+rownames(mat)<-Sitio
+kable(mat,booktabs=TRUE,longtable=TRUE)
+```
+
+---
+
+# Example calculating $\psi$ and $p$
+
+### Frequentist method (Maximum likelihood)
+
+.pull-left[   
+```{r eval=TRUE, echo=FALSE}
+library(knitr)
+muestreo<-c("v 1","v 2", "v 3", "v 4")
+Sitio<-c("s 1", "s 2", "s 3", "s x")
+mat<-matrix(c(1,0,1,0,
+              0,0,1,0,
+              0,0,0,0,
+              1,0,0,0),nrow=4,ncol = 4)
+colnames(mat)<-muestreo
+rownames(mat)<-Sitio
+kable(mat,booktabs=TRUE)
+```
+]
+
+.pull-right[
+
+| **Detection History**                  |
+|----------------------------------------|
+|  $H_{1} \psi$ × p1(1-p2)(1-p3)p4             |
+|  $H_{2} \psi$ × (1-p2)(1-p2)(1-p3)(1-p4)p4 |
+|  $H_{3} \psi$ × p1p2(1-p3)(1-p4)             |
+|  $H_{4} \psi$ × (1-p2)(1-p2)(1-p3)(1-p4)p4 |
+
+]
+
+
+### Histories Combined in a Model:
+
+$$
+\begin{aligned}
+L(\psi, p \mid H_{1},...,H_{x}) =  \prod_{i=1}^{x} Pr (H_{i})
+\end{aligned}
+$$
+--
+
+The model admits incorporating covariates to explain $\psi$ and $p$
+
+--
+
+---
+
+# Same example calculating $\psi$ and $p$
+
+### Bayesian method
+
+.pull-left[   
+```{r eval=TRUE, echo=FALSE}
+library(knitr)
+muestreo<-c("v 1","v 2", "v 3", "v 4")
+Sitio<-c("s 1", "s 2", "s 3", "s x")
+mat<-matrix(c(1,0,1,0,
+              0,0,1,0,
+              0,0,0,0,
+              1,0,0,0),nrow=4,ncol = 4)
+colnames(mat)<-muestreo
+rownames(mat)<-Sitio
+kable(mat,booktabs=TRUE)
+```
+]
+
+.pull-right[
+
+It is important to understand that there are two processes that can be modeled hierarchically
+
+- The ecological process ($\psi$) follows a Bernoulli distribution.
+- The observation model ($p$) follows a Bernoulli distribution.
+
+The probability of observing the species given that it is present:
+
+$p = Pr(y_{i}=1 \mid z_{i}=1)$
+
+The Occupancy probability: $\psi =Pr(z_{i}=1)$
+
+]
+
+---
+
+### A hierarchical (Bayesian) model
+
+![Full Occu Bayes](img/Occu_Bayes.png)
+
+### Admits Covariates
+
+
+---
+
+## Which one should I use? The maximum likelihood or Bayesian?
+
+.pull-left[ 
+ML
+
+- Package [unmarked](https://cran.r-project.org/web/packages/unmarked/index.html)
+- In R
+- Admits "automatic" model selection AIC
+- Problems with many NAs
+- Hesian problem. estimates ok.
+- Difficulty from 1 to 10: 3 if you already know R.
+
+]
+
+Bayesian
+
+.pull-right[
+- BUGS or Stan language, called from R
+- Model selection is not that easy, BIC is not suitable 
+- You don't have as many problems with many NAs in the matrix
+- Estimates are more accurate.
+- Difficulty from 1 to 10: 7 if you already know R.
+
+]
+
+---
+class: middle, center
+
+# Going Deep
+
+![libro
+azul](https://secure-ecsd.elsevier.com/covers/80/Tango2/large/9780123740977.jpg)
+
+### Andy Royle (2008)
+
+Advanced level book with lots of details, formulas, examples and code in R and BUGS language.
+
+---
+
+# Dragon-fly book (2015)
+
+.pull-left[ 
+![libro
+libelula](https://images-na.ssl-images-amazon.com/images/I/513ulKHhAKL._SX404_BO1,204,203,200_.jpg)
+]
+
+.pull-right[ 
+### More recent by [Marc Kery](http://store.elsevier.com/Marc-Kery/ELS_1059944/)
+
+More than 700 pages clearly explaining where the theory comes from, in a tutorial style, starting with a basic level of R to advanced models and their implementation in R and the BUGS language.
+]
+
+---
+background-image: url(img/baby-84626_1280.jpg)
+background-size: contain
+
+# Let's do it!
+
+
+![Coding now](https://www.r-project.org/Rlogo.png) 
+- R level? 
+- Objects?, Vectors?
+- DataFrame?
+- Loops?
+- Functions?
+
+---
+
+# Schedule
+
+.left-column[
+![Coding fast](http://i.giphy.com/fQZX2aoRC1Tqw.gif)
+]
+
+.right-column[
+
+| Day       | Topic                                                                                                                                |
+|-----------------|------------------------------------------------------|
+| Tuesday 28 pm |  Remembering R                                                                                                                |
+|           | [R as model tool](https://dlizcano.github.io/IntroOccuPresent/R_toModel.html)                                    |
+| Wednesday 29 am | [Occupancy concept](https://dlizcano.github.io/IntroOccuPresent/modelOccuData.html)                        |
+|           | Intro Occu Static model - [unmarked101](https://dlizcano.github.io/IntroOccuPresent/unmarked_101.html)                            |
+| Wednesday 29 pm | Static Model in deep I- [Sim Machalilla](https://dlizcano.github.io/IntroOccuBook/)                                             |
+|           | Static Model in deep II- [Data in unmarked](https://dlizcano.github.io/IntroOccuBook/unmarked.html#poniendo-los-datos-en-unmarked) |
+| Thursday 30 am | Questions. Real World Data - [Deer](https://github.com/dlizcano/IntroOccuPresent/raw/gh-pages/code/Pecari.rar)          |
+|           | [More models](https://dlizcano.github.io/IntroOccuPresent/Otros_modelos_jerarquicos.html)                        |
+
+]
+
+
+---
+class: bottom, center
+background-image: url(img/children-593313_1280.jpg)
+background-size: cover 
+
+
+
+# Thanks!
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+
+Contact: Diego J. Lizcano
+
+<a href="http://twitter.com/dlizcano"> `r fa("twitter", fill = "steelblue")`
+<a href="http://github.com/dlizcano"> `r fa("github", fill = "black")`
+
+
+
+---
+
+
+
+

@@ -1,0 +1,8 @@
+name: "Occupancy Modeling Workshop"
+navbar:
+  title: "Occupancy Modeling Workshop"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
