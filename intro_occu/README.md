@@ -1,15 +1,20 @@
-Welcome! 
 
-This is the Lizcano´s module for Tropical Biology: An Ecological Approach 2022
+# Simulación y análisis de ocupación
+## Diego J. Lizcano
 
-This is a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). 
+Libro Curso Introductorio a Análisis de Ocupación
 
-This template provides a skeleton file structure that you can edit to create your book. 
+Ver el libro tutorial en:
+https://dlizcano.github.io/IntroOccuBook
 
-The contents inside the .Rmd files provide some pointers to help you get started, but feel free to also delete the content in each file and start fresh.
 
-Additional resources:
+En este libro - tutorial realizaremos simulaciones de datos de modelos de ocupación, bajo el modelo estático (MacKenzie et al. 2002) para el venado de cola blanca en el Parque Nacional Machalilla.
 
-The **bookdown** book: https://bookdown.org/yihui/bookdown/
+El objetivo de este documento es entender la versatilidad y el poder de las simulaciones con R.
 
-The **bookdown** package reference site: https://pkgs.rstudio.com/bookdown
+
+Este libro ha sido escrito en [RMarkdown](http://rmarkdown.rstudio.com) empleando el paquete [`bookdown`](https://bookdown.org/yihui/bookdown/) y está disponible en el repositorio Github: [dlizcano/introR](https://github.com/dlizcano/introR). 
+
+El libro (compilado) está disponible online en [dlizcano.github.io/introR](https://dlizcano.github.io/IntroR).
+
+Para generar el libro (compilar) puede ser recomendable instalar la última versión de [RStudio]((https://www.rstudio.com/products/rstudio/download/)) y el paquete de R `bookdown`. 

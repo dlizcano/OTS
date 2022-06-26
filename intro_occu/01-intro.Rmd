@@ -1,11 +1,12 @@
-# Hello bookdown 
+# Introducción {#intro}
 
-All chapters start with a first-level heading followed by your chapter title, like the line above. There should be only one first-level heading (`#`) per .Rmd file.
+En este libro-tutorial realizaremos simulaciones de datos para modelos de ocupación, bajo el modelo estático de una sola estación, desarrollado originalmente por Daryl MacKenzie [@MacKenzie2002]. El modelo básico de ocupación, es la piedra angular del muestreo y monitoreo biológico moderno!.
 
-## A section
+El objetivo de este documento es entender la versatilidad y el poder de las simulaciones con R en el capítulo \@ref(why). Aprenderemos el principio biologico y el mecanismo bajo el cual funciona el modelo básico de ocupación en el capítulo \@ref(occu). Realizaremos un ejemplo sencillo en el capítulo \@ref(example) para un venado del Parque Nacional Machalilla. Posteriormente empacaremos el código que genera los datos de ocupación, en una sola función en el Capítulo \@ref(function1). Esta función nos permitirá simular datos bajo diferentes escenarios, los cuales analizaremos con los estimadores de máxima verosimilitud de la función occu del paquete unmarked en el Capítulo \@ref(unmarked). Posteriormente analizaremos los mismos datos bajo estimadores bayesianos en el Capítulo \@ref(bayesian), para al final comparar la precisión de ambas aproximaciones, máxima verosimilitud y bayesiana.
 
-All chapter sections start with a second-level (`##`) or higher heading followed by your section title, like the sections above and below here. You can have as many as you want within a chapter.
 
-### An unnumbered section {-}
+#### Créditos
 
-Chapters and sections are numbered by default. To un-number a heading, add a `{.unnumbered}` or the shorter `{-}` at the end of the heading, like in this section.
+Gran parte del concepto de este documento, el código y el texto han sido adaptados de los libros de [Marc Kery](http://store.elsevier.com/Marc-Kery/ELS_1059944/) [@Kery2012; @Kery2010; @kery2015applied].
+
+

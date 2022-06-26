@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 5 Nuestro ejemplo: | Simulación y análisis de ocupación</title>
+  <meta name="description" content="This is an R example to get occupancy data and analize it." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 5 Nuestro ejemplo: | Simulación y análisis de ocupación" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="images/venado_large.png" />
+  <meta property="og:description" content="This is an R example to get occupancy data and analize it." />
+  <meta name="github-repo" content="dlizcano/IntroOccuBook" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 5 Nuestro ejemplo: | Simulación y análisis de ocupación" />
+  
+  <meta name="twitter:description" content="This is an R example to get occupancy data and analize it." />
+  <meta name="twitter:image" content="images/venado_large.png" />
+
+<meta name="author" content="Diego J. Lizcano, Ph.D." />
+
+
+<meta name="date" content="2020-04-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<link rel="prev" href="occu.html"/>
+<link rel="next" href="function1.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Simulaciones y análisis de ocupación</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisitos</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introducción</a></li>
+<li class="chapter" data-level="3" data-path="why.html"><a href="why.html"><i class="fa fa-check"></i><b>3</b> Por qué simular?</a><ul>
+<li class="chapter" data-level="3.1" data-path="why.html"><a href="why.html#por-qué-son-útiles-las-simulaciones"><i class="fa fa-check"></i><b>3.1</b> por qué son útiles las simulaciones:</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="occu.html"><a href="occu.html"><i class="fa fa-check"></i><b>4</b> La ocupación de hábitat</a></li>
+<li class="chapter" data-level="5" data-path="example.html"><a href="example.html"><i class="fa fa-check"></i><b>5</b> Nuestro ejemplo:</a><ul>
+<li class="chapter" data-level="5.0.1" data-path="example.html"><a href="example.html#modelo-ecológico"><i class="fa fa-check"></i><b>5.0.1</b> Modelo Ecológico:</a></li>
+<li class="chapter" data-level="5.0.2" data-path="example.html"><a href="example.html#modelo-de-observación"><i class="fa fa-check"></i><b>5.0.2</b> Modelo de Observación:</a></li>
+<li class="chapter" data-level="5.1" data-path="example.html"><a href="example.html#pasos-iniciales-tamaño-de-la-muestra-y-valores-de-las-co-variables"><i class="fa fa-check"></i><b>5.1</b> Pasos iniciales: tamaño de la muestra y valores de las co-variables</a></li>
+<li class="chapter" data-level="5.2" data-path="example.html"><a href="example.html#simulando-el-proceso-ecológico-y-su-resultado-la-ocurrencia-del-venado"><i class="fa fa-check"></i><b>5.2</b> Simulando el proceso ecológico y su resultado: la ocurrencia del venado</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="example.html"><a href="example.html#por-qué-bernoulli"><i class="fa fa-check"></i><b>5.2.1</b> Por qué Bernoulli?</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="example.html"><a href="example.html#simulando-el-proceso-de-observación-y-su-resultado-la-detección"><i class="fa fa-check"></i><b>5.3</b> Simulando el proceso de observación y su resultado: la detección</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="example.html"><a href="example.html#uniendo-los-dos-procesos-el-ecológico-y-el-de-observación"><i class="fa fa-check"></i><b>5.3.1</b> Uniendo los dos procesos el ecológico y el de observación</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="function1.html"><a href="function1.html"><i class="fa fa-check"></i><b>6</b> Empacando todo en una función</a></li>
+<li class="chapter" data-level="7" data-path="unmarked.html"><a href="unmarked.html"><i class="fa fa-check"></i><b>7</b> Análisis de ocupación, metodo ML</a><ul>
+<li class="chapter" data-level="7.0.1" data-path="unmarked.html"><a href="unmarked.html#limpiando-la-memoria-de-r"><i class="fa fa-check"></i><b>7.0.1</b> Limpiando la memoria de R</a></li>
+<li class="chapter" data-level="7.1" data-path="unmarked.html"><a href="unmarked.html#generando-los-datos"><i class="fa fa-check"></i><b>7.1</b> Generando los datos</a></li>
+<li class="chapter" data-level="7.2" data-path="unmarked.html"><a href="unmarked.html#poniendo-los-datos-en-unmarked"><i class="fa fa-check"></i><b>7.2</b> Poniendo los datos en unmarked</a></li>
+<li class="chapter" data-level="7.3" data-path="unmarked.html"><a href="unmarked.html#ajustando-los-modelos"><i class="fa fa-check"></i><b>7.3</b> Ajustando los modelos</a></li>
+<li class="chapter" data-level="7.4" data-path="unmarked.html"><a href="unmarked.html#selección-de-modelos"><i class="fa fa-check"></i><b>7.4</b> Selección de modelos</a></li>
+<li class="chapter" data-level="7.5" data-path="unmarked.html"><a href="unmarked.html#predicción-en-graficas"><i class="fa fa-check"></i><b>7.5</b> Predicción en graficas</a></li>
+<li class="chapter" data-level="7.6" data-path="unmarked.html"><a href="unmarked.html#predicción-espacialmente-explicita"><i class="fa fa-check"></i><b>7.6</b> Predicción espacialmente explicita</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="bayesian.html"><a href="bayesian.html"><i class="fa fa-check"></i><b>8</b> Análisis Bayesiano</a><ul>
+<li class="chapter" data-level="8.1" data-path="bayesian.html"><a href="bayesian.html#generando-los-datos-1"><i class="fa fa-check"></i><b>8.1</b> Generando los datos</a></li>
+<li class="chapter" data-level="8.2" data-path="bayesian.html"><a href="bayesian.html#comparando-los-valores-reales-y-los-estimados-de-ml-y-bayesiano"><i class="fa fa-check"></i><b>8.2</b> Comparando los valores reales y los estimados de ML y Bayesiano</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="información-de-la-sesión-de-r-y-los-paquetes-usados.html"><a href="información-de-la-sesión-de-r-y-los-paquetes-usados.html"><i class="fa fa-check"></i><b>9</b> Información de la sesión de R y los paquetes usados</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/dlizcano/IntroOccuBook" target="_blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Simulación y análisis de ocupación</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="example" class="section level1">
+<h1><span class="header-section-number">Capítulo 5</span> Nuestro ejemplo:</h1>
+<p>El set de datos que vamos a simular, imita la forma espacial y temporal como imaginamos se originan las medidas repetidas de presencia ausencia en ecología. Las cuales son una combinación de un proceso ecológico y un proceso de observación. El primer proceso contiene los mecanismos bajo los cuales se originan patrones espacio-temporales de distribución, mientras que el segundo proceso contiene las diferentes facetas en las cuales se originan fuentes de error al tomar los datos.</p>
+<p>Para ser más concretos vamos a llamar a nuestra especie imaginaria con un nombre real. La llamaremos el venado de cola blanca (<em>Odocoileus virginianus</em>), un mamífero grande y común, ampliamente distribuido en el continente Americano, y de preocupación menor en términos de <a href="http://www.iucnredlist.org/details/42394">conservación</a>.</p>
+<p><img src="venado_large.jpg" alt="Venado de cola blanca" />
+El Venado de cola blanca (<em>Odocoileus virginianus</em>) nuestra especie de interes para este ejemplo. Foto del proyecto fauna de Manabi <a href="http://faunamanabi.github.io" class="uri">http://faunamanabi.github.io</a></p>
+<p>El set de datos contiene <em>J</em> datos replicados de detección o no detección de la especie en <em>M</em> sitios, teniendo en cuenta que asumimos que es una población cerrada (‘closure’ assumption). Es decir que durante el muestreo no ocurrieron cambios por nacimientos, muertes inmigración o emigración. En otras palabras, el muestreo fue corto en tiempo y la ocurrencia de la especie <em>z</em> no cambió por efectos demográficos.</p>
+<p>Claramente debemos distinguir dos procesos, el primero es el proceso ecológico, el cual genera (parcialmente) un estado latente de la ocurrencia <em>z</em>. El segundo es el proceso de observación, el cual produce los datos observados de detección o no detección del venado. Aquí asumimos que el proceso de observación está gobernado por un mecanismo de detección imperfecta. Es decir algunos venados pudieron haberse escapado a mi observación, lo cual genera falsos negativos. También asumimos que los falsos positivos están ausentes, es decir que todo lo que identifico como venado, es efectivamente un venado. Para hacer más realista el ejemplo incluimos los efectos de la altitud y la cobertura de bosque en la ocurrencia, como factores que afectan la ocurrencia linealmente, disminuyéndola para el caso de la elevación y que incrementan la ocupación linealmente para el caso de la cobertura de bosques. Al final las dos variables interactúan negativamente entre sí. Esos efectos se introducen en la ocurrencia en escala logarítmica como tradicionalmente se hace un modelo lineal generalizado (GLM).</p>
+<p>En nuestra simulación vamos a hacer explícito que no es posible detectar a la totalidad de los venados de un sitio de muestreo, así que estamos enfrentando un tipo de error que nos hace sub-estimar la abundancia de la población. Hay muchas razones por las cuales fallamos en detectar un individuo en la naturaleza, porque nos distrajimos mientras el venado pasó, porque los binoculares no tenían el aumento suficiente, o simplemente porque el venado se escondió detrás de un árbol al sentir nuestro olor, o por alguna otra razón. De esta forma nosotros vamos a registrar la presencia (<em>z</em>=1) con una probabilidad de detección <em>p</em> la cual también vamos a hacerla dependiente (en la escala logarítmica) de la altitud y de una co-variable que afecta la detección, la temperatura. En términos generales los animales son más difíciles de observar cuando la temperatura es más alta y por lo general entre más altitud la temperatura disminuye. De esta forma asumimos que la detección está relacionada negativamente con la altitud y la temperatura. Pero también hay que tener en cuenta que el efecto negativo en <em>p</em> también puede ser mediado por una disminución en la abundancia con la altitud, el cual también causa que la probabilidad de ocupación disminuya con la altitud. Tenga en cuenta que una co-variable, la altitud afecta a ambos procesos, el ecológico (la ocurrencia) y al proceso de observación (la probabilidad de detección). Esto tiene un propósito, y es probable que pase en la naturaleza muchas veces. Los modelos de ocupación tienen una base “mecanicista” produciendo variación espacial en la abundancia. Es decir tendremos sitios con mayor abundancia y otros con menor abundancia. Pero los modelos jerárquicos cómo el que estamos por construir, son capaces de desentrañar esas relaciones complejas entre ocurrencia y probabilidad de detección <span class="citation">(M. Kéry, <a href="#ref-KERY2008" role="doc-biblioref">2008</a>; M. Kéry &amp; Royle, <a href="#ref-Kery2008" role="doc-biblioref">2008</a>; Kéry &amp; Schaub, <a href="#ref-Kery2012" role="doc-biblioref">2012</a>)</span>. Finalmente para este primer ejemplo vamos a dejar por fuera el efecto de la interacción entre la altitud y la temperatura, ajustándolo a cero. Luego podremos variar este parámetro para considerar ese efecto. En resumen vamos a generar datos bajo el siguiente modelo, donde los sitios son indexados cómo <em>i</em> y los conteos repetidos en el sitio van a ser referidos cómo <em>j</em>.</p>
+<div id="modelo-ecológico" class="section level3">
+<h3><span class="header-section-number">5.0.1</span> Modelo Ecológico:</h3>
+<p><span class="math display" id="eq:binom">\[\begin{equation} 
+z _{i} = Bernoulli (\psi _{i})
+  \tag{5.1}
+\end{equation}\]</span></p>
+<p><span class="math display" id="eq:binom">\[\begin{equation} 
+logit(\psi _{i}) = \beta _{0} + \beta _{1} \ast Altitud _{i} + \beta _{2}\ast CovBosque _{i} + \beta _{3} \ast Altitud _{i} \ast CovBosque _{i}
+  \tag{5.1}
+\end{equation}\]</span></p>
+</div>
+<div id="modelo-de-observación" class="section level3">
+<h3><span class="header-section-number">5.0.2</span> Modelo de Observación:</h3>
+<p><span class="math display" id="eq:binom">\[\begin{equation} 
+y _{ij} = Bernoulli (z _{i} * p _{ij})
+  \tag{5.1}
+\end{equation}\]</span></p>
+<p><span class="math display" id="eq:binom">\[\begin{equation} 
+logit(p _{ij}) = \alpha  _{0} + \alpha  _{1} \ast Altitud _{i} + \alpha  _{2}\ast Temperatura _{ij} + \alpha _{3} \ast Altitud _{i} \ast Temperatura _{ij}
+  \tag{5.1}
+\end{equation}\]</span></p>
+<p>Donde <span class="math inline">\(\psi\)</span> es la ocupación y <em>p</em> la probabilidad de detección. Con <span class="math inline">\(\beta\)</span> como el coeficiente de la regresión para las co-variables de la ocupación y <span class="math inline">\(\alpha\)</span> el coeficiente de regresión para las co-variables de la detección.</p>
+<p>Vamos a generar datos desde “dentro hacia afuera” y desde arriba hacia abajo. Para esto, primero escogemos el tamaño de la muestra y creamos los valores para las co-variables. Segundo, seleccionamos los valores de los parámetros del modelo ecológico (la ocupación) y ensamblamos la ocurrencia esperada (el parámetro <span class="math inline">\(\psi\)</span>, ocupación) y posteriormente obtenemos la variable al azar <em>z</em> la cual tiene distribución Bernoulli. Tercero, seleccionamos los valores de los parámetros del modelo de observación (la detección), para ensamblar la probabilidad de detección <em>p</em> y obtener el segundo set de una variable al azar <em>y</em> (detección observada o no observada de un venado) la cual también tiene distribución Bernoulli.</p>
+<p>Para simular los datos usaremos el lenguaje de programación estadística R <span class="citation">(R Core Team, <a href="#ref-RCoreTeam2016" role="doc-biblioref">2016</a>)</span>, el cual provee una gran variedad de técnicas gráficas y estadísticas de modelación y un gran ecosistema de paquetes para análisis estadístico y ecológico. Si aún no lo ha hecho, baje e instale <a href="http://www.r-project.org/">R</a> en su computadora, posteriormente haga lo mismo con <a href="http://www.rstudio.com/">RStudio.</a></p>
+</div>
+<div id="pasos-iniciales-tamaño-de-la-muestra-y-valores-de-las-co-variables" class="section level2">
+<h2><span class="header-section-number">5.1</span> Pasos iniciales: tamaño de la muestra y valores de las co-variables</h2>
+<p>Inicie <a href="http://www.rstudio.com/">RStudio</a>, copie, pegue y ejecute los comandos de la ventana gris.</p>
+<p>Primero escogemos el tamaño de la muestra, el número de sitios y el número de medidas repetidas (número de visitas) de presencia/ausencia en cada sitio.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">M &lt;-<span class="st"> </span><span class="dv">60</span>  <span class="co"># Número de réplicas espaciales (sitios)</span></a>
+<a class="sourceLine" id="cb2-2" title="2">J &lt;-<span class="st"> </span><span class="dv">30</span>  <span class="co"># Número de réplicas temporales (conteos repetidos)</span></a></code></pre></div>
+<p>Luego creamos los valores para las co-variables. Tenemos altitud y cobertura de bosque como co-variables de cada sitio. Ellas difieren de sitio a sitio pero para cada muestreo son las mismas. Mientras que la temperatura es una co-variable de la observación, así que si varía en cada muestreo y también en cada sitio. Recuerde que el sub índice <em>i</em> se refiere al sitio y el <em>j</em> a cada muestreo. Para simplificar las cosas nuestras co-variables van a tener una distribución normal con una media centrada en cero y no se van a extender muy lejos en cada lado del cero. En análisis de datos reales tendremos que estandarizar las co-variables para evitar problemas numéricos de diferencia en las escalas de las co-variables y poder calcular el valor de máxima verosimilitud (ML), así como también para obtener convergencia en las cadenas de Markov del modelo Bayesiano. Aquí vamos a ignorar un hecho de la vida real, y es que las co-variables no son totalmente independientes la una de la otra, es decir en la naturaleza la cobertura boscosa puede estar relacionada con la altitud, pero esto no va a ser relevante, por ahora.</p>
+<p>Para inicializar el generador de números aleatorios y obtener siempre los mismos resultados podemos adicionar la siguiente línea:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">set.seed</span>(<span class="dv">24</span>) <span class="co"># Can choose seed of your choice</span></a></code></pre></div>
+<p>De esta forma podremos obtener siempre los mismos estimados. Pero luego cuando queramos obtener el error de muestreo deberemos remover esa línea. Para este ejemplo generaremos valores para las covariables centrados en cero y variando de -1 a 1.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">elev &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> M, <span class="dv">-1</span>, <span class="dv">1</span>)             <span class="co"># Scaled elevation of a site</span></a>
+<a class="sourceLine" id="cb4-2" title="2">forest &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> M, <span class="dv">-1</span>, <span class="dv">1</span>)           <span class="co"># Scaled forest cover at each site</span></a>
+<a class="sourceLine" id="cb4-3" title="3">temp &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">runif</span>(<span class="dt">n =</span> M<span class="op">*</span>J, <span class="dv">-1</span>, <span class="dv">1</span>), <span class="dt">dim =</span> <span class="kw">c</span>(M, J)) <span class="co"># Scaled temperature</span></a></code></pre></div>
+</div>
+<div id="simulando-el-proceso-ecológico-y-su-resultado-la-ocurrencia-del-venado" class="section level2">
+<h2><span class="header-section-number">5.2</span> Simulando el proceso ecológico y su resultado: la ocurrencia del venado</h2>
+<p>Para simular la ocurrencia del venado en cada sitio, escogemos los valores para los parámetros que gobiernan la variación espacial en la ocurrencia <span class="math inline">\(\beta _{0}\)</span> a <span class="math inline">\(\beta _{3}\)</span>. El primer parámetro es la ocurrencia promedio esperada del venado (probabilidad de ocupación) cuando todas las co-variables tienen un valor de cero, en otras palabras el intercepto del modelo de ocurrencia. Preferimos pensar en los venados en términos de su ocurrencia en lugar de logit(ocurrencia). Aquí nosotros escogemos el intercepto de la ocupación primero y luego lo transformamos de la escala logarítmica con la función de enlace logit.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">mean.occupancy &lt;-<span class="st"> </span><span class="fl">0.60</span>         <span class="co"># Mean expected occurrence of deer</span></a>
+<a class="sourceLine" id="cb5-2" title="2">beta0 &lt;-<span class="st"> </span><span class="kw">plogis</span>(mean.occupancy) <span class="co"># Same on logit scale (= logit-scale intercept)</span></a>
+<a class="sourceLine" id="cb5-3" title="3">beta1 &lt;-<span class="st"> </span><span class="dv">-2</span>                    <span class="co"># Effect (slope) of elevation</span></a>
+<a class="sourceLine" id="cb5-4" title="4">beta2 &lt;-<span class="st"> </span><span class="dv">2</span>                     <span class="co"># Effect (slope) of forest cover</span></a>
+<a class="sourceLine" id="cb5-5" title="5">beta3 &lt;-<span class="st"> </span><span class="dv">1</span>                     <span class="co"># Interaction effect (slope) of elev and forest</span></a></code></pre></div>
+<p>Aquí aplicamos el modelo lineal (a la escala logarítmica) y obtenemos la transformación logit de la probabilidad de ocupación, la cual invertimos con la transformación logit para obtener la ocupación del venado y graficar todo.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">logit.psi &lt;-<span class="st"> </span>beta0 <span class="op">+</span><span class="st"> </span>beta1 <span class="op">*</span><span class="st"> </span>elev <span class="op">+</span><span class="st"> </span>beta2 <span class="op">*</span><span class="st"> </span>forest <span class="op">+</span><span class="st"> </span>beta3 <span class="op">*</span><span class="st"> </span>elev <span class="op">*</span><span class="st"> </span>forest</a>
+<a class="sourceLine" id="cb6-2" title="2">psi &lt;-<span class="st"> </span><span class="kw">plogis</span>(logit.psi)      <span class="co"># Inverse link transformation</span></a>
+<a class="sourceLine" id="cb6-3" title="3"></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co"># par()              # view current settings</span></a>
+<a class="sourceLine" id="cb6-5" title="5">opar &lt;-<span class="st"> </span><span class="kw">par</span>()      <span class="co"># make a copy of current settings</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="dt">cex.main =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="kw">curve</span>(<span class="kw">plogis</span>(beta0 <span class="op">+</span><span class="st"> </span>beta1<span class="op">*</span>x), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb6-8" title="8">      <span class="dt">xlab =</span> <span class="st">&quot;Altitud&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;psi&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb6-9" title="9"><span class="kw">text</span>(<span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="st">&quot;A&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="kw">plot</span>(elev, psi, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Altitud&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb6-11" title="11"><span class="kw">text</span>(<span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="st">&quot;B&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a>
+<a class="sourceLine" id="cb6-12" title="12"><span class="kw">curve</span>(<span class="kw">plogis</span>(beta0 <span class="op">+</span><span class="st"> </span>beta2<span class="op">*</span>x), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb6-13" title="13">      <span class="dt">xlab =</span> <span class="st">&quot;Forest cover&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;psi&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb6-14" title="14"><span class="kw">text</span>(<span class="op">-</span><span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="st">&quot;C&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a>
+<a class="sourceLine" id="cb6-15" title="15"><span class="kw">plot</span>(forest, psi, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Forest cover&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb6-16" title="16"><span class="kw">text</span>(<span class="op">-</span><span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="st">&quot;D&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a></code></pre></div>
+<div class="figure"><span id="fig:fig2"></span>
+<img src="IntroOccuBook_files/figure-html/fig2-1.png" alt="Dos formas de mostrar la relación entre la probabilidad de ocurrencia de los venados y las co-variables.  (A) Relación entre psi y altitud para un valor constante (media igual a cero) de cobertura boscosa. (B) Relación entre psi y la altitud en un valor observado de cobertura boscosa. (C) relación psi cobertura boscosa para una altitud constante (en la media de cero). (D) Relación psi cobertura boscosa para el valor observado de altitud." width="672" />
+<p class="caption">
+Figure 5.1: Dos formas de mostrar la relación entre la probabilidad de ocurrencia de los venados y las co-variables. (A) Relación entre psi y altitud para un valor constante (media igual a cero) de cobertura boscosa. (B) Relación entre psi y la altitud en un valor observado de cobertura boscosa. (C) relación psi cobertura boscosa para una altitud constante (en la media de cero). (D) Relación psi cobertura boscosa para el valor observado de altitud.
+</p>
+</div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># dev.off()</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">par</span>(opar)          <span class="co"># restore original par settings</span></a></code></pre></div>
+<p>Para mostrar mejor la relación conjunta entre las dos covariables y psi, debemos realizar un diagrama de superficie. Aquí no hemos cambiado nada de la simulación, solo le hemos agregado más datos para visualizar mejor.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co"># Compute expected occurrence for a grid of elevation and forest cover</span></a>
+<a class="sourceLine" id="cb8-2" title="2">cov1 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, , <span class="dv">100</span>)                       <span class="co"># Values for elevation</span></a>
+<a class="sourceLine" id="cb8-3" title="3">cov2 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, , <span class="dv">100</span>)                       <span class="co"># Values for forest cover</span></a>
+<a class="sourceLine" id="cb8-4" title="4">psi.matrix &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="ot">NA</span>, <span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">100</span>))      <span class="co"># Prediction matrix, for every </span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co"># combination of values of elevation and forest cover</span></a>
+<a class="sourceLine" id="cb8-6" title="6"></a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>){</a>
+<a class="sourceLine" id="cb8-8" title="8">   <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>){</a>
+<a class="sourceLine" id="cb8-9" title="9">      psi.matrix[i, j] &lt;-<span class="st"> </span><span class="kw">plogis</span>(beta0 <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="st">                                   </span>beta1 <span class="op">*</span><span class="st"> </span>cov1[i] <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-11" title="11"><span class="st">                                   </span>beta2 <span class="op">*</span><span class="st"> </span>cov2[j] <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="st">                                   </span>beta3 <span class="op">*</span><span class="st"> </span>cov1[i] <span class="op">*</span><span class="st"> </span>cov2[j] )</a>
+<a class="sourceLine" id="cb8-13" title="13">   }</a>
+<a class="sourceLine" id="cb8-14" title="14">}</a>
+<a class="sourceLine" id="cb8-15" title="15"></a>
+<a class="sourceLine" id="cb8-16" title="16">mapPalette &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>(<span class="kw">c</span>(<span class="st">&quot;grey&quot;</span>, <span class="st">&quot;yellow&quot;</span>, <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;red&quot;</span>))</a>
+<a class="sourceLine" id="cb8-17" title="17"><span class="kw">image</span>(<span class="dt">x =</span> cov1, <span class="dt">y =</span> cov2, <span class="dt">z =</span> psi.matrix, <span class="dt">col =</span> <span class="kw">mapPalette</span>(<span class="dv">100</span>), <span class="dt">xlab =</span> <span class="st">&quot;Altitud&quot;</span>, </a>
+<a class="sourceLine" id="cb8-18" title="18">      <span class="dt">ylab =</span> <span class="st">&quot;Forest cover&quot;</span>, <span class="dt">cex.lab =</span> <span class="fl">1.2</span>)</a>
+<a class="sourceLine" id="cb8-19" title="19"><span class="kw">contour</span>(<span class="dt">x =</span> cov1, <span class="dt">y =</span> cov2, <span class="dt">z =</span> psi.matrix, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lwd =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb8-20" title="20"><span class="kw">matpoints</span>(elev, forest, <span class="dt">pch=</span><span class="st">&quot;+&quot;</span>, <span class="dt">cex=</span><span class="fl">0.8</span>)</a></code></pre></div>
+<div class="figure"><span id="fig:fig3"></span>
+<img src="IntroOccuBook_files/figure-html/fig3-1.png" alt="Relación construida ente los datos simulados de la ocurrencia esperada (ocupación) del venado (psi) representada con la escala de color de gris a rojo, contra la altitud y la cobertura boscosa simultáneamente. En este caso la interacción entre las dos covariables está dada por el valor de beta3 = 1 que hemos establecido anteriormente." width="672" />
+<p class="caption">
+Figure 5.2: Relación construida ente los datos simulados de la ocurrencia esperada (ocupación) del venado (psi) representada con la escala de color de gris a rojo, contra la altitud y la cobertura boscosa simultáneamente. En este caso la interacción entre las dos covariables está dada por el valor de beta3 = 1 que hemos establecido anteriormente.
+</p>
+</div>
+<p>Hasta ahora no hemos introducido ninguna variación estocástica en la relación entre la ocurrencia del venado y las covariables. Para hacer esto debemos hacer uso de algunos modelos estadísticos o distribuciones estadísticas, para describir la variabilidad al azar alrededor del valor esperado de psi. La forma típica de introducir esta variación al azar es obtener la ocurrencia de venados en cada sitio <em>i</em>, <span class="math inline">\(z _{i}\)</span>, de una distribución Bernoulli con los valores esperados (<span class="math inline">\(\psi _{i}\)</span>).</p>
+<div id="por-qué-bernoulli" class="section level3">
+<h3><span class="header-section-number">5.2.1</span> Por qué Bernoulli?</h3>
+<p>En el proceso ecológico <span class="math inline">\(z _{i}\)</span> la ocurrencia del venado esta representado por una distribución de tipo Bernoulli donde el venado esté presente en un sitio representado como la ocupación <span class="math inline">\(\psi\)</span> en un sitio en que esta presente, o no esta presente 1-<span class="math inline">\(\psi\)</span>. La distribución Bernoulli es un caso especial de la distribución binomial, y su mejor ejemplo es el lanzamiento de una moneda una sola vez. Si requiere una explicación más extensa, básica, detallada y con más ejemplos le recomiendo visitar <a href="https://es.khanacademy.org/math/probability/statistics-inferential/margin-of-error/v/mean-and-variance-of-bernoulli-distribution-example">khanacademy.</a></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">z &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> M, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> psi)  <span class="co"># Realised occurrence. A Bernoulli</span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="kw">sum</span>(z)                                    <span class="co"># Total number of occupied sites</span></a></code></pre></div>
+<pre><code>## [1] 40</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">table</span>(z)                                  <span class="co"># Frequency distribution of deer occurrence</span></a></code></pre></div>
+<pre><code>## z
+##  0  1 
+## 20 40</code></pre>
+<p>Aquí hemos creado el resultado del proceso ecológico: ocurrencia específica para cada sitio <span class="math inline">\(z _{1}\)</span>. Vemos que 20 sitios no están ocupados y que los restantes 40 si están ocupados.</p>
+</div>
+</div>
+<div id="simulando-el-proceso-de-observación-y-su-resultado-la-detección" class="section level2">
+<h2><span class="header-section-number">5.3</span> Simulando el proceso de observación y su resultado: la detección</h2>
+<p>La ocurrencia <em>z</em> no es lo que normalmente vemos, ya que hay un chance de que fallemos en observar un individuo. De ahí que haya una medida binaria de error cuando medimos la ocurrencia (lo observamos o no lo observamos). Nosotros asumimos que podemos hacer únicamente una de las dos posibles observaciones (si, no), pero pudimos haber perdido la observación de un venado en algún sitio, entonces la probabilidad de detección es menor que uno y la medida de error es afectada por la cobertura de bosque y la temperatura. Hay que tener en cuenta que nunca vamos a registrar la presencia de un venado cuando en realidad no hay venados. En otras palabras estamos asumiendo que no tenemos falsos positivos. Para hacer explícito que tenemos un efecto de interacción entre dos co-variables en nuestros datos, vamos a permitir un efecto de la interacción en el código, pero ajustado a cero y de esta forma sin efecto en el modelo que genera los datos. Primero seleccionamos los valores para <span class="math inline">\(\alpha _{0}\)</span> hasta <span class="math inline">\(\alpha _{3}\)</span>, donde el primero es la probabilidad de detección para el venado, en la escala logit, cuando todas las co-variables de la detección tienen un valor de cero. Hemos escogido el intercepto del modelo de detección y luego lo transformamos con la función de enlace plogis. Esto no es lo mismo que la probabilidad de detección media, la cual es más alta en nuestro modelo de simulación, como veremos más adelante.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">mean.detection &lt;-<span class="st"> </span><span class="fl">0.3</span>            <span class="co"># Mean expected detection</span></a>
+<a class="sourceLine" id="cb13-2" title="2">alpha0 &lt;-<span class="st"> </span><span class="kw">qlogis</span>(mean.detection) <span class="co"># same on logit scale (intercept)</span></a>
+<a class="sourceLine" id="cb13-3" title="3">alpha1 &lt;-<span class="st"> </span><span class="dv">-1</span>                     <span class="co"># Effect (slope) of elevation</span></a>
+<a class="sourceLine" id="cb13-4" title="4">alpha2 &lt;-<span class="st"> </span><span class="dv">-3</span>                     <span class="co"># Effect (slope) of temperature</span></a>
+<a class="sourceLine" id="cb13-5" title="5">alpha3 &lt;-<span class="st"> </span><span class="dv">0</span>                      <span class="co"># Interaction effect (slope) of elevevation and temperature</span></a></code></pre></div>
+<p>Aplicando el modelo lineal, tenemos el logit de la probabilidad de detección del venado para cada sitio y muestreo, y aplicándole la transformación inversa (plogis), obtenemos una matriz de las dimensiones 60 por 30 con la probabilidad de detección para cada sitio <em>i</em> y muestreo <em>j</em>. Finalmente, graficamos las relaciones para la probabilidad de detección en los datos.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">logit.p &lt;-<span class="st"> </span>alpha0 <span class="op">+</span><span class="st"> </span>alpha1 <span class="op">*</span><span class="st"> </span>elev <span class="op">+</span><span class="st"> </span>alpha2 <span class="op">*</span><span class="st"> </span>temp <span class="op">+</span><span class="st"> </span>alpha3 <span class="op">*</span><span class="st"> </span>elev <span class="op">*</span><span class="st"> </span>temp</a>
+<a class="sourceLine" id="cb14-2" title="2">p &lt;-<span class="st"> </span><span class="kw">plogis</span>(logit.p)             <span class="co"># Inverse link transform </span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="kw">mean</span>(p)                          <span class="co"># average per-site p is about 0.39</span></a></code></pre></div>
+<pre><code>## [1] 0.3928068</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="dt">cex.main =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="kw">curve</span>(<span class="kw">plogis</span>(alpha0 <span class="op">+</span><span class="st"> </span>alpha1<span class="op">*</span>x), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">1.1</span>), </a>
+<a class="sourceLine" id="cb16-3" title="3">      <span class="dt">xlab =</span> <span class="st">&quot;Altitud&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;p&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="kw">text</span>(<span class="op">-</span><span class="fl">0.9</span>, <span class="fl">1.05</span>, <span class="st">&quot;A&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a>
+<a class="sourceLine" id="cb16-5" title="5"><span class="kw">matplot</span>(elev, p, <span class="dt">pch =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">1.1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Altitud&quot;</span>, </a>
+<a class="sourceLine" id="cb16-6" title="6">        <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb16-7" title="7"><span class="kw">text</span>(<span class="op">-</span><span class="fl">0.9</span>, <span class="fl">1.05</span>, <span class="st">&quot;B&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a>
+<a class="sourceLine" id="cb16-8" title="8"><span class="kw">curve</span>(<span class="kw">plogis</span>(alpha0 <span class="op">+</span><span class="st"> </span>alpha2<span class="op">*</span>x), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">1.1</span>), </a>
+<a class="sourceLine" id="cb16-9" title="9">      <span class="dt">xlab =</span> <span class="st">&quot;Temperature&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;p&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb16-10" title="10"><span class="kw">text</span>(<span class="op">-</span><span class="fl">0.9</span>, <span class="fl">1.05</span>, <span class="st">&quot;C&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a>
+<a class="sourceLine" id="cb16-11" title="11"><span class="kw">matplot</span>(temp, p, <span class="dt">pch =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">1.1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Temperature&quot;</span>, </a>
+<a class="sourceLine" id="cb16-12" title="12">        <span class="dt">ylab =</span> <span class="st">&quot;p&quot;</span>)</a>
+<a class="sourceLine" id="cb16-13" title="13"><span class="kw">text</span>(<span class="op">-</span><span class="fl">0.9</span>, <span class="fl">1.05</span>, <span class="st">&quot;D&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a></code></pre></div>
+<div class="figure"><span id="fig:fig4"></span>
+<img src="IntroOccuBook_files/figure-html/fig4-1.png" alt="Dos formas de mostrar las relaciones entre la probabilidad de detección esperada del venado (_p_) y las dos variables altitud y temperatura. (A) Relación _p_ y altitud para temperatura constante (en el valor medio, que es igual a cero). (B) Relación entre _p_ y la altitud en el valor observado de cantidad de temperatura. (C) Relación entre _p_ y temperatura para un valor constante de altitud (en la altitud media igual a cero). (D) Relación entre _p_ y temperatura para un valor observado de altitud." width="672" />
+<p class="caption">
+Figure 5.3: Dos formas de mostrar las relaciones entre la probabilidad de detección esperada del venado (<em>p</em>) y las dos variables altitud y temperatura. (A) Relación <em>p</em> y altitud para temperatura constante (en el valor medio, que es igual a cero). (B) Relación entre <em>p</em> y la altitud en el valor observado de cantidad de temperatura. (C) Relación entre <em>p</em> y temperatura para un valor constante de altitud (en la altitud media igual a cero). (D) Relación entre <em>p</em> y temperatura para un valor observado de altitud.
+</p>
+</div>
+<p>De forma similar vamos a producir una gráfica de una superficie con la relación conjunta entre la altitud, la temperatura y la probabilidad de detección del venado (<em>p</em>), actuando simultáneamente. La relación en la escala logarítmica es representada por un plano con pendiente que representa la interacción entre la elevación y la cobertura de bosque.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co"># Compute expected detection probability for a grid of elevation and temperature</span></a>
+<a class="sourceLine" id="cb17-2" title="2">cov1 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>,,<span class="dv">100</span>)                  <span class="co"># Values of elevation</span></a>
+<a class="sourceLine" id="cb17-3" title="3">cov2 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">100</span>)                   <span class="co"># Values of temperature</span></a>
+<a class="sourceLine" id="cb17-4" title="4">p.matrix &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="ot">NA</span>, <span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">100</span>)) <span class="co"># Prediction matrix which combines </span></a>
+<a class="sourceLine" id="cb17-5" title="5"><span class="co"># every value in cov 1 with every other in cov2</span></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>){</a>
+<a class="sourceLine" id="cb17-7" title="7">   <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>){</a>
+<a class="sourceLine" id="cb17-8" title="8">      p.matrix[i, j] &lt;-<span class="st"> </span><span class="kw">plogis</span>(alpha0 <span class="op">+</span><span class="st"> </span>alpha1 <span class="op">*</span><span class="st"> </span>cov1[i] <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb17-9" title="9"><span class="st">                                 </span>alpha2 <span class="op">*</span><span class="st"> </span>cov2[j] <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb17-10" title="10"><span class="st">                                 </span>alpha3 <span class="op">*</span><span class="st"> </span>cov1[i] <span class="op">*</span><span class="st"> </span>cov2[j])</a>
+<a class="sourceLine" id="cb17-11" title="11">   }</a>
+<a class="sourceLine" id="cb17-12" title="12">}</a>
+<a class="sourceLine" id="cb17-13" title="13"><span class="kw">image</span>(<span class="dt">x =</span> cov1, <span class="dt">y =</span> cov2, <span class="dt">z =</span> p.matrix, <span class="dt">col =</span> <span class="kw">mapPalette</span>(<span class="dv">100</span>), <span class="dt">xlab =</span> <span class="st">&quot;Altitud&quot;</span>, </a>
+<a class="sourceLine" id="cb17-14" title="14">      <span class="dt">ylab =</span> <span class="st">&quot;Temperature&quot;</span>, <span class="dt">cex.lab =</span> <span class="fl">1.2</span>)</a>
+<a class="sourceLine" id="cb17-15" title="15"><span class="kw">contour</span>(<span class="dt">x =</span> cov1, <span class="dt">y =</span> cov2, <span class="dt">z =</span> p.matrix, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lwd =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb17-16" title="16"><span class="kw">matpoints</span>(elev, temp, <span class="dt">pch=</span><span class="st">&quot;+&quot;</span>, <span class="dt">cex=</span><span class="fl">0.7</span>, <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a></code></pre></div>
+<div class="figure"><span id="fig:fig5"></span>
+<img src="IntroOccuBook_files/figure-html/fig5-1.png" alt="Relación construida ente los datos simulados de la probabilidad de detección esperada (detectabilidad) del venado (p) representada con la escala de color de gris a rojo, contra la altitud y la temperatura simultáneamente. En este caso la interacción entre las dos covariables tiene una relación lineal que esta dada por el valor de alpha3 = 0 que hemos establecido anteriormente." width="672" />
+<p class="caption">
+Figure 5.4: Relación construida ente los datos simulados de la probabilidad de detección esperada (detectabilidad) del venado (p) representada con la escala de color de gris a rojo, contra la altitud y la temperatura simultáneamente. En este caso la interacción entre las dos covariables tiene una relación lineal que esta dada por el valor de alpha3 = 0 que hemos establecido anteriormente.
+</p>
+</div>
+<p>Hasta acá hemos modelado los dos procesos el ecológico <span class="math inline">\(z\)</span> y el de observación <em>p</em> por aparte. Ahora tendremos que ponerlos juntos, y para esto multiplicamos el resultado del proceso ecológico por la probabilidad de detección dentro de una distribución Bernoulli.</p>
+<div id="uniendo-los-dos-procesos-el-ecológico-y-el-de-observación" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> Uniendo los dos procesos el ecológico y el de observación</h3>
+<p>Cuando “medimos” la ocurrencia, la detección imperfecta, representa una fuente de error con una distribución de tipo Bernoulli (por ejemplo la presencia del venado en un sitio en que es detectado con una probabilidad <em>p</em>, o no es detectado como 1-<em>p</em>). Al aplicar este proceso de observación producimos medidas repetidas de la presencia o ausencia (1 o 0) del venado en cada sitio. Recuerde que la distribución Bernoulli es un caso especial de la distribución binomial, y su mejor ejemplo es el lanzamiento de una moneda una sola vez.</p>
+<p>En este momento estamos estableciendo la jerarquía en el modelo jerárquico. Aca estamos anidando el proceso ecológico “dentro” del proceso de observación.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> M, <span class="dt">ncol =</span> J)      <span class="co"># Prepare array for counts</span></a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J){                          <span class="co"># Generate counts</span></a>
+<a class="sourceLine" id="cb18-3" title="3">   y[,i] &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> M, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> z<span class="op">*</span>p[,i])   <span class="co"># this is the Bernoulli</span></a>
+<a class="sourceLine" id="cb18-4" title="4">}</a></code></pre></div>
+<p>Hasta acá hemos simulado la presencia/ausencia del venado de cola blanca en 60 sitios durante 30 sesiones de muestreo. Veamos que contienen las tablas. Recuerde que los sitios están en las filas y los muestreos repetidos en las columnas. Para comparar, mostraremos la verdadera ocurrencia en la primera columna para 30 sitios y solo cinco muestreos.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">library</span>(knitr)</a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="kw">kable</span>(<span class="kw">as.data.frame</span>(<span class="kw">head</span>(<span class="kw">cbind</span>(<span class="st">&quot;True Presence/Absence&quot;</span> =<span class="st"> </span>z, </a>
+<a class="sourceLine" id="cb19-3" title="3">           <span class="st">&quot;1st survey&quot;</span> =<span class="st"> </span>y[,<span class="dv">1</span>], </a>
+<a class="sourceLine" id="cb19-4" title="4">           <span class="st">&quot;2nd survey&quot;</span> =<span class="st"> </span>y[,<span class="dv">2</span>], </a>
+<a class="sourceLine" id="cb19-5" title="5">           <span class="st">&quot;3rd survey&quot;</span> =<span class="st"> </span>y[,<span class="dv">3</span>],</a>
+<a class="sourceLine" id="cb19-6" title="6">           <span class="st">&quot;4th survey&quot;</span> =<span class="st"> </span>y[,<span class="dv">4</span>],</a>
+<a class="sourceLine" id="cb19-7" title="7">           <span class="st">&quot;5th survey&quot;</span> =<span class="st"> </span>y[,<span class="dv">5</span>]), <span class="dv">30</span>)) )   <span class="co"># First 30 rows (= sites)</span></a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">True Presence/Absence</th>
+<th align="right">1st survey</th>
+<th align="right">2nd survey</th>
+<th align="right">3rd survey</th>
+<th align="right">4th survey</th>
+<th align="right">5th survey</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>Ahora finalmente visualizaremos gráficamente los datos de unos y ceros que hemos simulado para nuestro muestreo. Recuerde que se trata de valores de unos que representan si hemos detectado, o no hemos detectado al venado, en cada uno de los sitios de muestreo en cada una de las visitas.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="dt">cex.main =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="kw">matplot</span>(elev, <span class="kw">jitter</span>(y), <span class="dt">pch =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb20-3" title="3">        <span class="dt">xlab =</span> <span class="st">&quot;Altitud&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Detection/Nondetection (y)&quot;</span>)</a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="kw">matplot</span>(forest, <span class="kw">jitter</span>(y), <span class="dt">pch =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb20-5" title="5">        <span class="dt">xlab =</span> <span class="st">&quot;Forest cover&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Detection/Nondetection (y)&quot;</span>)</a>
+<a class="sourceLine" id="cb20-6" title="6"><span class="kw">matplot</span>(temp, <span class="kw">jitter</span>(y), <span class="dt">pch =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb20-7" title="7">        <span class="dt">xlab =</span> <span class="st">&quot;Temperature&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Detection/Nondetection (y)&quot;</span>)</a>
+<a class="sourceLine" id="cb20-8" title="8"><span class="kw">hist</span>(y, <span class="dt">breaks =</span> <span class="dv">50</span>, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">600</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, </a>
+<a class="sourceLine" id="cb20-9" title="9">     <span class="dt">xlab =</span> <span class="st">&quot;Detection/Nondetection (y)&quot;</span>)</a></code></pre></div>
+<div class="figure"><span id="fig:fig6"></span>
+<img src="IntroOccuBook_files/figure-html/fig6-1.png" alt="Relación entre la ocupación observada (jittered) de venados (y) y las tres covariables estandarizadas. Altitud (A). Cobertura de bosque (B). Temperatura (C) y la frecuencia de distribución de la ocurrencia observada (y) en un set de datos de 60 sitios con 30 muestreos cada uno (D)." width="672" />
+<p class="caption">
+Figure 5.5: Relación entre la ocupación observada (jittered) de venados (y) y las tres covariables estandarizadas. Altitud (A). Cobertura de bosque (B). Temperatura (C) y la frecuencia de distribución de la ocurrencia observada (y) en un set de datos de 60 sitios con 30 muestreos cada uno (D).
+</p>
+</div>
+<p>Hasta aquí hemos creado un set de datos donde la detección/no detección del venado esta negativamente correlacionado con la temperatura y positivamente relacionado con la cobertura de bosque. Hay una razón por la cual esta correlación entre variables es diferente. La ocurrencia por sitio, el objetivo de la inferencia ecológica, está afectado por la cobertura de bosque y la altitud, pero no por la temperatura, mientras que la probabilidad de detección, el parámetro caracterizando la medida del proceso de error cuando tomamos medidas de ocurrencia, es también afectado por la altitud y adicionalmente por la temperatura. Por lo tanto, como se puede notar, hay un gran reto para poder desenredar la razón de la variación espacio-temporal en la observación de los datos de detección/no detección, dado que pueden ser afectados por dos procesos totalmente diferentes: el ecológico y el observacional, que también la misma covariable puede afectar los dos procesos y que también pueden existir interacciones entre covariables.</p>
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-KERY2008">
+<p>Kéry, M. (2008). Estimating abundance from bird counts: binomial mixture models uncover complex covariate relationships. <em>The Auk</em>, <em>125</em>(2), 336–345. doi: <a href="https://doi.org/10.1525/auk.2008.06185">10.1525/auk.2008.06185</a></p>
+</div>
+<div id="ref-Kery2008">
+<p>Kéry, M., &amp; Royle, J. A. (2008). Hierarchical Bayes estimation of species richness and occupancy in spatially replicated surveys. <em>Journal of Applied Ecology</em>, <em>45</em>(2), 589–598. doi: <a href="https://doi.org/10.1111/j.1365-2664.2007.01441.x">10.1111/j.1365-2664.2007.01441.x</a></p>
+</div>
+<div id="ref-Kery2012">
+<p>Kéry, M., &amp; Schaub, M. (2012). Estimation of Occupancy and Species Distributions from Detection/Nondetection Data in Metapopulation Designs Using Site-Occupancy Models. In <em>Bayesian population analysis using winbugs</em> (pp. 413–461). doi: <a href="https://doi.org/10.1016/B978-0-12-387020-9.00013-4">10.1016/B978-0-12-387020-9.00013-4</a></p>
+</div>
+<div id="ref-RCoreTeam2016">
+<p>R Core Team. (2016). <em>R: A language and environment for statistical computing</em>. Retrieved from <a href="http://www.r-project.org/">http://www.r-project.org/</a></p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="occu.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="function1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": true,
+"twitter": true,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/dlizcano/IntroOccuBook/edit/master/04-example.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["IntroOccuBook.pdf"],
+"toc": {
+"collapse": "subsection"
+},
+"info": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

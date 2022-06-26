@@ -1,0 +1,6 @@
+# Información de la sesión de R y los paquetes usados
+
+```{r sesion_info, cache=TRUE}
+sessionInfo()
+```
+

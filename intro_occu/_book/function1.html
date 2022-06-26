@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 6 Empacando todo en una función | Simulación y análisis de ocupación</title>
+  <meta name="description" content="This is an R example to get occupancy data and analize it." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 6 Empacando todo en una función | Simulación y análisis de ocupación" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="images/venado_large.png" />
+  <meta property="og:description" content="This is an R example to get occupancy data and analize it." />
+  <meta name="github-repo" content="dlizcano/IntroOccuBook" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 6 Empacando todo en una función | Simulación y análisis de ocupación" />
+  
+  <meta name="twitter:description" content="This is an R example to get occupancy data and analize it." />
+  <meta name="twitter:image" content="images/venado_large.png" />
+
+<meta name="author" content="Diego J. Lizcano, Ph.D." />
+
+
+<meta name="date" content="2020-04-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<link rel="prev" href="example.html"/>
+<link rel="next" href="unmarked.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Simulaciones y análisis de ocupación</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisitos</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introducción</a></li>
+<li class="chapter" data-level="3" data-path="why.html"><a href="why.html"><i class="fa fa-check"></i><b>3</b> Por qué simular?</a><ul>
+<li class="chapter" data-level="3.1" data-path="why.html"><a href="why.html#por-qué-son-útiles-las-simulaciones"><i class="fa fa-check"></i><b>3.1</b> por qué son útiles las simulaciones:</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="occu.html"><a href="occu.html"><i class="fa fa-check"></i><b>4</b> La ocupación de hábitat</a></li>
+<li class="chapter" data-level="5" data-path="example.html"><a href="example.html"><i class="fa fa-check"></i><b>5</b> Nuestro ejemplo:</a><ul>
+<li class="chapter" data-level="5.0.1" data-path="example.html"><a href="example.html#modelo-ecológico"><i class="fa fa-check"></i><b>5.0.1</b> Modelo Ecológico:</a></li>
+<li class="chapter" data-level="5.0.2" data-path="example.html"><a href="example.html#modelo-de-observación"><i class="fa fa-check"></i><b>5.0.2</b> Modelo de Observación:</a></li>
+<li class="chapter" data-level="5.1" data-path="example.html"><a href="example.html#pasos-iniciales-tamaño-de-la-muestra-y-valores-de-las-co-variables"><i class="fa fa-check"></i><b>5.1</b> Pasos iniciales: tamaño de la muestra y valores de las co-variables</a></li>
+<li class="chapter" data-level="5.2" data-path="example.html"><a href="example.html#simulando-el-proceso-ecológico-y-su-resultado-la-ocurrencia-del-venado"><i class="fa fa-check"></i><b>5.2</b> Simulando el proceso ecológico y su resultado: la ocurrencia del venado</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="example.html"><a href="example.html#por-qué-bernoulli"><i class="fa fa-check"></i><b>5.2.1</b> Por qué Bernoulli?</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="example.html"><a href="example.html#simulando-el-proceso-de-observación-y-su-resultado-la-detección"><i class="fa fa-check"></i><b>5.3</b> Simulando el proceso de observación y su resultado: la detección</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="example.html"><a href="example.html#uniendo-los-dos-procesos-el-ecológico-y-el-de-observación"><i class="fa fa-check"></i><b>5.3.1</b> Uniendo los dos procesos el ecológico y el de observación</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="function1.html"><a href="function1.html"><i class="fa fa-check"></i><b>6</b> Empacando todo en una función</a></li>
+<li class="chapter" data-level="7" data-path="unmarked.html"><a href="unmarked.html"><i class="fa fa-check"></i><b>7</b> Análisis de ocupación, metodo ML</a><ul>
+<li class="chapter" data-level="7.0.1" data-path="unmarked.html"><a href="unmarked.html#limpiando-la-memoria-de-r"><i class="fa fa-check"></i><b>7.0.1</b> Limpiando la memoria de R</a></li>
+<li class="chapter" data-level="7.1" data-path="unmarked.html"><a href="unmarked.html#generando-los-datos"><i class="fa fa-check"></i><b>7.1</b> Generando los datos</a></li>
+<li class="chapter" data-level="7.2" data-path="unmarked.html"><a href="unmarked.html#poniendo-los-datos-en-unmarked"><i class="fa fa-check"></i><b>7.2</b> Poniendo los datos en unmarked</a></li>
+<li class="chapter" data-level="7.3" data-path="unmarked.html"><a href="unmarked.html#ajustando-los-modelos"><i class="fa fa-check"></i><b>7.3</b> Ajustando los modelos</a></li>
+<li class="chapter" data-level="7.4" data-path="unmarked.html"><a href="unmarked.html#selección-de-modelos"><i class="fa fa-check"></i><b>7.4</b> Selección de modelos</a></li>
+<li class="chapter" data-level="7.5" data-path="unmarked.html"><a href="unmarked.html#predicción-en-graficas"><i class="fa fa-check"></i><b>7.5</b> Predicción en graficas</a></li>
+<li class="chapter" data-level="7.6" data-path="unmarked.html"><a href="unmarked.html#predicción-espacialmente-explicita"><i class="fa fa-check"></i><b>7.6</b> Predicción espacialmente explicita</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="bayesian.html"><a href="bayesian.html"><i class="fa fa-check"></i><b>8</b> Análisis Bayesiano</a><ul>
+<li class="chapter" data-level="8.1" data-path="bayesian.html"><a href="bayesian.html#generando-los-datos-1"><i class="fa fa-check"></i><b>8.1</b> Generando los datos</a></li>
+<li class="chapter" data-level="8.2" data-path="bayesian.html"><a href="bayesian.html#comparando-los-valores-reales-y-los-estimados-de-ml-y-bayesiano"><i class="fa fa-check"></i><b>8.2</b> Comparando los valores reales y los estimados de ML y Bayesiano</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="información-de-la-sesión-de-r-y-los-paquetes-usados.html"><a href="información-de-la-sesión-de-r-y-los-paquetes-usados.html"><i class="fa fa-check"></i><b>9</b> Información de la sesión de R y los paquetes usados</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/dlizcano/IntroOccuBook" target="_blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Simulación y análisis de ocupación</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="function1" class="section level1">
+<h1><span class="header-section-number">Capítulo 6</span> Empacando todo en una función</h1>
+<p>Podría ser de mucha utilidad empacar todo lo que hemos hecho en una sola función que nos permita hacer lo mismo muchas veces repetidamente. Esto hará que podamos diseñar simulaciones de una forma más concisa y flexible y hace más transparente la generación de parámetros usados para generar datos. Asi que vamos a definir una función (que llamaremos data.fn) para generar el mismo tipo de datos que acabamos de crear, asignando argumentos a la función, tales como tamaño de la muestra, efectos de las covariables y direcciones y magnitudes de la interacción de los términos del error de detección y ocupación. Esto hará que nuestro código sea más flexible y eficiente.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co">###############################</span></a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="co">## The function starts here </span><span class="al">###</span></a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="co">###############################</span></a>
+<a class="sourceLine" id="cb21-4" title="4"></a>
+<a class="sourceLine" id="cb21-5" title="5"><span class="co"># Function definition with set of default values</span></a>
+<a class="sourceLine" id="cb21-6" title="6">data.fn &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">M =</span> <span class="dv">60</span>, <span class="dt">J =</span> <span class="dv">30</span>, <span class="dt">mean.occupancy =</span> <span class="fl">0.6</span>, </a>
+<a class="sourceLine" id="cb21-7" title="7">                    <span class="dt">beta1 =</span> <span class="dv">-2</span>, <span class="dt">beta2 =</span> <span class="dv">2</span>, <span class="dt">beta3 =</span> <span class="dv">1</span>, <span class="dt">mean.detection =</span> <span class="fl">0.3</span>, </a>
+<a class="sourceLine" id="cb21-8" title="8">                    <span class="dt">alpha1 =</span> <span class="dv">-1</span>, <span class="dt">alpha2 =</span> <span class="dv">-3</span>, <span class="dt">alpha3 =</span> <span class="dv">0</span>, <span class="dt">show.plot =</span> <span class="ot">TRUE</span>){</a>
+<a class="sourceLine" id="cb21-9" title="9"><span class="co"># Function to simulate occupancy measurements replicated at M sites during J occasions.</span></a>
+<a class="sourceLine" id="cb21-10" title="10"><span class="co"># Population closure is assumed for each site.</span></a>
+<a class="sourceLine" id="cb21-11" title="11"><span class="co"># Expected occurrence may be affected by elevation (elev), </span></a>
+<a class="sourceLine" id="cb21-12" title="12"><span class="co"># forest cover (forest) and their interaction.</span></a>
+<a class="sourceLine" id="cb21-13" title="13"><span class="co"># Expected detection probability may be affected by elevation, </span></a>
+<a class="sourceLine" id="cb21-14" title="14"><span class="co"># temperature (temp) and their interaction.</span></a>
+<a class="sourceLine" id="cb21-15" title="15"><span class="co"># Function arguments:</span></a>
+<a class="sourceLine" id="cb21-16" title="16"><span class="co">#     M: Number of spatial replicates (sites)</span></a>
+<a class="sourceLine" id="cb21-17" title="17"><span class="co">#     J: Number of temporal replicates (occasions)</span></a>
+<a class="sourceLine" id="cb21-18" title="18"><span class="co">#     mean.occupancy: Mean occurrence at value 0 of occurrence covariates</span></a>
+<a class="sourceLine" id="cb21-19" title="19"><span class="co">#     beta1: Main effect of elevation on occurrence</span></a>
+<a class="sourceLine" id="cb21-20" title="20"><span class="co">#     beta2: Main effect of forest cover on occurrence</span></a>
+<a class="sourceLine" id="cb21-21" title="21"><span class="co">#     beta3: Interaction effect on occurrence of elevation and forest cover</span></a>
+<a class="sourceLine" id="cb21-22" title="22"><span class="co">#     mean.detection: Mean detection prob. at value 0 of detection covariates</span></a>
+<a class="sourceLine" id="cb21-23" title="23"><span class="co">#     alpha1: Main effect of elevation on detection probability</span></a>
+<a class="sourceLine" id="cb21-24" title="24"><span class="co">#     alpha2: Main effect of temperature on detection probability</span></a>
+<a class="sourceLine" id="cb21-25" title="25"><span class="co">#     alpha3: Interaction effect on detection of elevation and temperature</span></a>
+<a class="sourceLine" id="cb21-26" title="26"><span class="co">#     show.plot: if TRUE, plots of the data will be displayed; </span></a>
+<a class="sourceLine" id="cb21-27" title="27"><span class="co">#               set to FALSE if you are running simulations.</span></a>
+<a class="sourceLine" id="cb21-28" title="28"></a>
+<a class="sourceLine" id="cb21-29" title="29"><span class="co"># Create covariates</span></a>
+<a class="sourceLine" id="cb21-30" title="30">elev &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> M, <span class="dv">-1</span>, <span class="dv">1</span>)                         <span class="co"># Scaled elevation</span></a>
+<a class="sourceLine" id="cb21-31" title="31">forest &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> M, <span class="dv">-1</span>, <span class="dv">1</span>)                       <span class="co"># Scaled forest cover</span></a>
+<a class="sourceLine" id="cb21-32" title="32">temp &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">runif</span>(<span class="dt">n =</span> M<span class="op">*</span>J, <span class="dv">-1</span>, <span class="dv">1</span>), <span class="dt">dim =</span> <span class="kw">c</span>(M, J)) <span class="co"># Scaled temperature</span></a>
+<a class="sourceLine" id="cb21-33" title="33"></a>
+<a class="sourceLine" id="cb21-34" title="34"><span class="co"># Model for occurrence</span></a>
+<a class="sourceLine" id="cb21-35" title="35">beta0 &lt;-<span class="st"> </span><span class="kw">qlogis</span>(mean.occupancy)               <span class="co"># Mean occurrence on link scale</span></a>
+<a class="sourceLine" id="cb21-36" title="36">psi &lt;-<span class="st"> </span><span class="kw">plogis</span>(beta0 <span class="op">+</span><span class="st"> </span>beta1<span class="op">*</span>elev <span class="op">+</span><span class="st"> </span>beta2<span class="op">*</span>forest <span class="op">+</span><span class="st"> </span>beta3<span class="op">*</span>elev<span class="op">*</span>forest)</a>
+<a class="sourceLine" id="cb21-37" title="37">z &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> M, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> psi)      <span class="co"># Realised occurrence</span></a>
+<a class="sourceLine" id="cb21-38" title="38"></a>
+<a class="sourceLine" id="cb21-39" title="39"><span class="co"># Plots</span></a>
+<a class="sourceLine" id="cb21-40" title="40"><span class="cf">if</span>(show.plot){</a>
+<a class="sourceLine" id="cb21-41" title="41">  <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">cex.main =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb21-42" title="42">  <span class="kw">devAskNewPage</span>(<span class="dt">ask =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb21-43" title="43">  <span class="kw">curve</span>(<span class="kw">plogis</span>(beta0 <span class="op">+</span><span class="st"> </span>beta1<span class="op">*</span>x), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, </a>
+<a class="sourceLine" id="cb21-44" title="44">      <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Elevation&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;psi&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb21-45" title="45">  <span class="kw">plot</span>(elev, psi, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Elevation&quot;</span>, </a>
+<a class="sourceLine" id="cb21-46" title="46">     <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb21-47" title="47">  <span class="kw">curve</span>(<span class="kw">plogis</span>(beta0 <span class="op">+</span><span class="st"> </span>beta2<span class="op">*</span>x), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, </a>
+<a class="sourceLine" id="cb21-48" title="48">      <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Forest cover&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;psi&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb21-49" title="49">  <span class="kw">plot</span>(forest, psi, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Forest cover&quot;</span>, </a>
+<a class="sourceLine" id="cb21-50" title="50">     <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb21-51" title="51">}</a>
+<a class="sourceLine" id="cb21-52" title="52"></a>
+<a class="sourceLine" id="cb21-53" title="53"><span class="co"># Model for observations</span></a>
+<a class="sourceLine" id="cb21-54" title="54">y &lt;-<span class="st"> </span>p &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> M, <span class="dt">ncol =</span> J)<span class="co"># Prepare matrix for y and p</span></a>
+<a class="sourceLine" id="cb21-55" title="55">alpha0 &lt;-<span class="st"> </span><span class="kw">qlogis</span>(mean.detection)        <span class="co"># mean detection on link scale</span></a>
+<a class="sourceLine" id="cb21-56" title="56"><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J){                         <span class="co"># Generate counts by survey</span></a>
+<a class="sourceLine" id="cb21-57" title="57">   p[,j] &lt;-<span class="st"> </span><span class="kw">plogis</span>(alpha0 <span class="op">+</span><span class="st"> </span>alpha1<span class="op">*</span>elev <span class="op">+</span><span class="st"> </span>alpha2<span class="op">*</span>temp[,j] <span class="op">+</span><span class="st"> </span>alpha3<span class="op">*</span>elev<span class="op">*</span>temp[,j])</a>
+<a class="sourceLine" id="cb21-58" title="58">   y[,j] &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> M, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> z <span class="op">*</span><span class="st"> </span>p[,j])</a>
+<a class="sourceLine" id="cb21-59" title="59">}</a>
+<a class="sourceLine" id="cb21-60" title="60"></a>
+<a class="sourceLine" id="cb21-61" title="61"><span class="co"># True and observed measures of &#39;distribution&#39;</span></a>
+<a class="sourceLine" id="cb21-62" title="62">sumZ &lt;-<span class="st"> </span><span class="kw">sum</span>(z)                     <span class="co"># Total occurrence (all sites)</span></a>
+<a class="sourceLine" id="cb21-63" title="63">sumZ.obs &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">apply</span>(y,<span class="dv">1</span>,max))    <span class="co"># Observed number of occ sites</span></a>
+<a class="sourceLine" id="cb21-64" title="64">psi.fs.true &lt;-<span class="st"> </span><span class="kw">sum</span>(z) <span class="op">/</span><span class="st"> </span>M          <span class="co"># True proportion of occ. sites in sample</span></a>
+<a class="sourceLine" id="cb21-65" title="65">psi.fs.obs &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">apply</span>(y,<span class="dv">1</span>,max)) <span class="co"># Observed proportion of occ. sites in sample</span></a>
+<a class="sourceLine" id="cb21-66" title="66"></a>
+<a class="sourceLine" id="cb21-67" title="67"><span class="co"># More plots</span></a>
+<a class="sourceLine" id="cb21-68" title="68"><span class="cf">if</span>(show.plot){</a>
+<a class="sourceLine" id="cb21-69" title="69">  <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb21-70" title="70">  <span class="kw">curve</span>(<span class="kw">plogis</span>(alpha0 <span class="op">+</span><span class="st"> </span>alpha1<span class="op">*</span>x), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, </a>
+<a class="sourceLine" id="cb21-71" title="71">      <span class="dt">main =</span> <span class="st">&quot;Relationship p-elevation </span><span class="ch">\n</span><span class="st">at average temperature&quot;</span>, </a>
+<a class="sourceLine" id="cb21-72" title="72">      <span class="dt">xlab =</span> <span class="st">&quot;Scaled elevation&quot;</span>, <span class="dt">frame.plot =</span> F)</a>
+<a class="sourceLine" id="cb21-73" title="73">  <span class="kw">matplot</span>(elev, p, <span class="dt">xlab =</span> <span class="st">&quot;Scaled elevation&quot;</span>, </a>
+<a class="sourceLine" id="cb21-74" title="74">        <span class="dt">main =</span> <span class="st">&quot;Relationship p-elevation</span><span class="ch">\n</span><span class="st"> at observed temperature&quot;</span>, </a>
+<a class="sourceLine" id="cb21-75" title="75">        <span class="dt">pch =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">frame.plot =</span> F)</a>
+<a class="sourceLine" id="cb21-76" title="76">  <span class="kw">curve</span>(<span class="kw">plogis</span>(alpha0 <span class="op">+</span><span class="st"> </span>alpha2<span class="op">*</span>x), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, </a>
+<a class="sourceLine" id="cb21-77" title="77">      <span class="dt">main =</span> <span class="st">&quot;Relationship p-temperature </span><span class="ch">\n</span><span class="st"> at average elevation&quot;</span>, </a>
+<a class="sourceLine" id="cb21-78" title="78">      <span class="dt">xlab =</span> <span class="st">&quot;Scaled temperature&quot;</span>, <span class="dt">frame.plot =</span> F)</a>
+<a class="sourceLine" id="cb21-79" title="79">  <span class="kw">matplot</span>(temp, p, <span class="dt">xlab =</span> <span class="st">&quot;Scaled temperature&quot;</span>, </a>
+<a class="sourceLine" id="cb21-80" title="80">        <span class="dt">main =</span> <span class="st">&quot;Relationship p-temperature </span><span class="ch">\n</span><span class="st">at observed elevation&quot;</span>, </a>
+<a class="sourceLine" id="cb21-81" title="81">        <span class="dt">pch =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">frame.plot =</span> F)</a>
+<a class="sourceLine" id="cb21-82" title="82">}</a>
+<a class="sourceLine" id="cb21-83" title="83"></a>
+<a class="sourceLine" id="cb21-84" title="84"><span class="co"># Output</span></a>
+<a class="sourceLine" id="cb21-85" title="85"><span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">M =</span> M, <span class="dt">J =</span> J, <span class="dt">mean.occupancy =</span> mean.occupancy, </a>
+<a class="sourceLine" id="cb21-86" title="86">            <span class="dt">beta0 =</span> beta0, <span class="dt">beta1 =</span> beta1, <span class="dt">beta2 =</span> beta2, <span class="dt">beta3 =</span> beta3, </a>
+<a class="sourceLine" id="cb21-87" title="87">            <span class="dt">mean.detection =</span> mean.detection, </a>
+<a class="sourceLine" id="cb21-88" title="88">            <span class="dt">alpha0 =</span> alpha0, <span class="dt">alpha1 =</span> alpha1, <span class="dt">alpha2 =</span> alpha2, <span class="dt">alpha3 =</span> alpha3, </a>
+<a class="sourceLine" id="cb21-89" title="89">            <span class="dt">elev =</span> elev, <span class="dt">forest =</span> forest, <span class="dt">temp =</span> temp, </a>
+<a class="sourceLine" id="cb21-90" title="90">            <span class="dt">psi =</span> psi, <span class="dt">z =</span> z, <span class="dt">p =</span> p, <span class="dt">y =</span> y, <span class="dt">sumZ =</span> sumZ, <span class="dt">sumZ.obs =</span> sumZ.obs, </a>
+<a class="sourceLine" id="cb21-91" title="91">            <span class="dt">psi.fs.true =</span> psi.fs.true, <span class="dt">psi.fs.obs =</span> psi.fs.obs))</a>
+<a class="sourceLine" id="cb21-92" title="92">}</a>
+<a class="sourceLine" id="cb21-93" title="93"></a>
+<a class="sourceLine" id="cb21-94" title="94"><span class="co">###############################</span></a>
+<a class="sourceLine" id="cb21-95" title="95"><span class="co">## The function ends  here  </span><span class="al">###</span></a>
+<a class="sourceLine" id="cb21-96" title="96"><span class="co">###############################</span></a></code></pre></div>
+<p>Una vez que hayamos definido la función y ejecutado su código, podremos llamarla repetidamente y enviar los resultados a la pantalla o asignarlos a un objeto en R. De forma tal que podamos usar el set de datos almacenado en el objeto para un análisis detallado.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co"># Run this part line by line, taking note of the meaning of the </span></a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="co"># model in the comment and hitting Enter after each graph.</span></a>
+<a class="sourceLine" id="cb22-3" title="3"><span class="co"># Take in to account that if you do not override all the parameters</span></a>
+<a class="sourceLine" id="cb22-4" title="4"><span class="co"># with another value, the function will use the default values.</span></a>
+<a class="sourceLine" id="cb22-5" title="5"></a>
+<a class="sourceLine" id="cb22-6" title="6"><span class="kw">data.fn</span>()                  <span class="co"># Execute function with default arguments</span></a>
+<a class="sourceLine" id="cb22-7" title="7"><span class="kw">data.fn</span>(<span class="dt">show.plot =</span> <span class="ot">FALSE</span>) <span class="co"># same, without plots</span></a>
+<a class="sourceLine" id="cb22-8" title="8">objeto1 &lt;-<span class="st"> </span><span class="kw">data.fn</span>(<span class="dt">M =</span> <span class="dv">30</span>, <span class="dt">J =</span> <span class="dv">10</span>, <span class="dt">mean.occupancy =</span> <span class="fl">0.5</span>, </a>
+<a class="sourceLine" id="cb22-9" title="9">                   <span class="dt">beta1 =</span> <span class="dv">-2</span>, <span class="dt">beta2 =</span> <span class="dv">2</span>, <span class="dt">beta3 =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb22-10" title="10">                   <span class="dt">mean.detection =</span> <span class="fl">0.25</span>, <span class="dt">alpha1 =</span> <span class="dv">-1</span>,</a>
+<a class="sourceLine" id="cb22-11" title="11">                   <span class="dt">alpha2 =</span> <span class="dv">-3</span>, <span class="dt">alpha3 =</span> <span class="dv">0</span>, <span class="dt">show.plot =</span> <span class="ot">TRUE</span>) <span class="co"># Explicit defaults</span></a></code></pre></div>
+<p><img src="IntroOccuBook_files/figure-html/fun_call1b-1.png" width="672" /><img src="IntroOccuBook_files/figure-html/fun_call1b-2.png" width="672" /></p>
+<p>Tal vez el uso más sencillo posible para esta función es experimentar de primera mano el error de muestreo: el cuál es la variabilidad natural de realizaciones repetidas (varios sets de datos) de nuestro proceso estocástico por el cual calculamos los set de datos. Vamos a simular 10.000 sets de datos del venado para ver como varían en términos del verdadero número de sitios ocupados (sumZ en el código) y el número de sitios en los que los venados fueron observados al menos una vez. Tenga en cuenta que los datos generados en las 10.000 tienen los parámetros por defecto en los parámetros mean.occupancy y mean.detection.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">simrep &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb23-2" title="2">trueSumZ &lt;-<span class="st"> </span>obsSumZ &lt;-<span class="st"> </span><span class="kw">numeric</span>(simrep)</a>
+<a class="sourceLine" id="cb23-3" title="3"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>simrep){</a>
+<a class="sourceLine" id="cb23-4" title="4">   <span class="cf">if</span>(i <span class="op">%%</span><span class="st"> </span><span class="dv">1000</span> <span class="op">==</span><span class="dv">0</span> )                        <span class="co"># report progress</span></a>
+<a class="sourceLine" id="cb23-5" title="5">   <span class="kw">cat</span>(<span class="st">&quot;iter&quot;</span>, i, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb23-6" title="6">   data &lt;-<span class="st"> </span><span class="kw">data.fn</span>(<span class="dt">M =</span> <span class="dv">60</span>,<span class="dt">J =</span> <span class="dv">3</span>,<span class="dt">show.plot =</span> <span class="ot">FALSE</span>) <span class="co"># 60 sitios, 3 muestreos, p=0.3</span></a>
+<a class="sourceLine" id="cb23-7" title="7">   trueSumZ[i] &lt;-<span class="st"> </span>data<span class="op">$</span>sumZ</a>
+<a class="sourceLine" id="cb23-8" title="8">   obsSumZ[i] &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">apply</span>(data<span class="op">$</span>y, <span class="dv">1</span>, max))</a>
+<a class="sourceLine" id="cb23-9" title="9">}</a></code></pre></div>
+<pre><code>## iter 1000 
+## iter 2000 
+## iter 3000 
+## iter 4000 
+## iter 5000 
+## iter 6000 
+## iter 7000 
+## iter 8000 
+## iter 9000 
+## iter 10000</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">plot</span>(<span class="kw">sort</span>(trueSumZ), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="kw">min</span>(obsSumZ), <span class="kw">max</span>(trueSumZ)), <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;Simulation&quot;</span>,</a>
+<a class="sourceLine" id="cb25-2" title="2">     <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;True (red) and observed (blue) number of occupied sites&quot;</span>)</a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="kw">points</span>(obsSumZ[<span class="kw">order</span>(trueSumZ)], <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</a></code></pre></div>
+<div class="figure"><span id="fig:fig7"></span>
+<img src="IntroOccuBook_files/figure-html/fig7-1.png" alt="Variabilidad natural (error de muestreo) del verdadero número de sitios ocupados (ordenados por tamaño) en color rojo y el número observado de sitios ocupados (en azul). El número de sitios observados/total también se conoce como la ocupación ingenua o (naïve) de la ocurrencia de los venados en 60 sitios en la simulación. El ancho del área azul representa el error inducido por la detección imperfecta. Note la importancia de tener en cuenta este error para tener una mejor idea de la ocupación." width="672" />
+<p class="caption">
+Figure 6.1: Variabilidad natural (error de muestreo) del verdadero número de sitios ocupados (ordenados por tamaño) en color rojo y el número observado de sitios ocupados (en azul). El número de sitios observados/total también se conoce como la ocupación ingenua o (naïve) de la ocurrencia de los venados en 60 sitios en la simulación. El ancho del área azul representa el error inducido por la detección imperfecta. Note la importancia de tener en cuenta este error para tener una mejor idea de la ocupación.
+</p>
+</div>
+<p>Como ejercicio, cambie el código para generar otras vez las 10.000 simulaciones con una detección media (mean.detection =0.5), alta (mean.detection =0.8), y perfecta (mean.detection =1). Compare las gráficas resultantes.</p>
+<p>Ahora podemos usar esta función para generar datos bajo diferentes esquemas de muestreo, variando el número de sitios y el número de muestreos repetidos. Así como también bajo diferentes características ecológicas y de detección, y considerando posibles interacciones entre covariables.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co"># Run this part line by line, taking note of the meaning of the </span></a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="co"># model in the comment and hitting Enter after each graph.</span></a>
+<a class="sourceLine" id="cb26-3" title="3"><span class="co"># Take in to account that if you do not override all the parameters</span></a>
+<a class="sourceLine" id="cb26-4" title="4"><span class="co"># with another value, the function will use the default values.</span></a>
+<a class="sourceLine" id="cb26-5" title="5"></a>
+<a class="sourceLine" id="cb26-6" title="6"><span class="kw">data.fn</span>(<span class="dt">J =</span> <span class="dv">1</span>, <span class="dt">show.plot =</span> T)  <span class="co"># Only 1 survey (no temporal replicate)</span></a>
+<a class="sourceLine" id="cb26-7" title="7"><span class="kw">data.fn</span>(<span class="dt">J =</span> <span class="dv">2</span>, <span class="dt">show.plot =</span> T)  <span class="co"># Only 2 surveys (sites)</span></a>
+<a class="sourceLine" id="cb26-8" title="8"><span class="kw">data.fn</span>(<span class="dt">M =</span> <span class="dv">5</span>, <span class="dt">J =</span> <span class="dv">3</span>)          <span class="co"># Only 5 sites, 3 counts (repeted visits)</span></a>
+<a class="sourceLine" id="cb26-9" title="9"><span class="kw">data.fn</span>(<span class="dt">M =</span> <span class="dv">1</span>, <span class="dt">J =</span> <span class="dv">100</span>)        <span class="co"># No spatial replicates, but 100 counts</span></a>
+<a class="sourceLine" id="cb26-10" title="10"><span class="kw">data.fn</span>(<span class="dt">M =</span> <span class="dv">1000</span>, <span class="dt">J =</span> <span class="dv">100</span>)     <span class="co"># Very intensive sampling. 1000 sites, 100 visits</span></a>
+<a class="sourceLine" id="cb26-11" title="11"></a>
+<a class="sourceLine" id="cb26-12" title="12"><span class="kw">data.fn</span>(<span class="dt">mean.occupancy =</span> <span class="fl">0.6</span>,   <span class="co"># psi = 0.6 and</span></a>
+<a class="sourceLine" id="cb26-13" title="13">        <span class="dt">mean.detection =</span> <span class="dv">1</span>,     <span class="co"># p = 1 (perfect detection!!!)</span></a>
+<a class="sourceLine" id="cb26-14" title="14">        <span class="dt">show.plot =</span> T)</a>
+<a class="sourceLine" id="cb26-15" title="15"></a>
+<a class="sourceLine" id="cb26-16" title="16"><span class="kw">data.fn</span>(<span class="dt">mean.occupancy =</span> <span class="fl">0.95</span>,  <span class="co"># psi = 1 a really coomon sp.</span></a>
+<a class="sourceLine" id="cb26-17" title="17">        <span class="dt">mean.detection =</span> <span class="dv">1</span>,     <span class="co"># p = 1 (perfect detection!!!)</span></a>
+<a class="sourceLine" id="cb26-18" title="18">        <span class="dt">show.plot =</span> T)</a>
+<a class="sourceLine" id="cb26-19" title="19"></a>
+<a class="sourceLine" id="cb26-20" title="20"><span class="kw">data.fn</span>(<span class="dt">mean.occupancy =</span> <span class="fl">0.05</span>,  <span class="co"># psi = 0.05 a really rare sp.</span></a>
+<a class="sourceLine" id="cb26-21" title="21">        <span class="dt">mean.detection =</span> <span class="fl">0.05</span>,  <span class="co"># p = 0.05 and very hard to detect !!!</span></a>
+<a class="sourceLine" id="cb26-22" title="22">        <span class="dt">show.plot =</span> T)</a>
+<a class="sourceLine" id="cb26-23" title="23"></a>
+<a class="sourceLine" id="cb26-24" title="24"><span class="kw">data.fn</span>(<span class="dt">beta3 =</span> <span class="fl">1.5</span>, <span class="dt">show.plot =</span> <span class="ot">TRUE</span>) <span class="co"># With interaction elev-temp on p</span></a>
+<a class="sourceLine" id="cb26-25" title="25"></a>
+<a class="sourceLine" id="cb26-26" title="26"><span class="kw">data.fn</span>(<span class="dt">mean.occupancy =</span> <span class="fl">0.6</span>, <span class="dt">beta1 =</span> <span class="dv">-2</span>, <span class="dt">beta2 =</span> <span class="dv">2</span>, <span class="dt">beta3 =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb26-27" title="27">        <span class="dt">mean.detection =</span> <span class="fl">0.1</span>, <span class="dt">show.plot =</span> <span class="ot">TRUE</span>)  <span class="co"># p = 1 (low detectability)</span></a>
+<a class="sourceLine" id="cb26-28" title="28"></a>
+<a class="sourceLine" id="cb26-29" title="29"><span class="kw">data.fn</span>(<span class="dt">M =</span> <span class="dv">267</span>, <span class="dt">J =</span> <span class="dv">5</span>, <span class="dt">mean.occupancy =</span> <span class="fl">0.6</span>, <span class="dt">beta1 =</span> <span class="dv">0</span>, <span class="dt">beta2 =</span> <span class="dv">0</span>, <span class="dt">beta3 =</span> <span class="dv">0</span>, </a>
+<a class="sourceLine" id="cb26-30" title="30">        <span class="dt">mean.detection =</span> <span class="fl">0.4</span>, <span class="dt">alpha1 =</span> <span class="dv">0</span>, <span class="dt">alpha2 =</span> <span class="dv">0</span>, <span class="dt">alpha3 =</span> <span class="dv">0</span>, <span class="dt">show.plot =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb26-31" title="31"><span class="co"># Simplest case with occupancy (0.6) and detection (0.4) constant, no covariate effects</span></a>
+<a class="sourceLine" id="cb26-32" title="32"><span class="co"># observe betas = 0, and alphas = 0. This correspond to a kind of null model.</span></a></code></pre></div>
+<blockquote>
+<p><strong>FELICITACIONES!!!, si llego hasta acá, y si entendió la simulación de datos y su procedimiento, entonces Ud. entendió totalmente el modelo básico de ocupación, el cual es la piedra angular del muestreo y monitoreo biológico moderno.</strong></p>
+</blockquote>
+<p><img src="https://media.giphy.com/media/fxsqOYnIMEefC/giphy.gif" /></p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="example.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="unmarked.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": true,
+"twitter": true,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/dlizcano/IntroOccuBook/edit/master/05-all-in-function.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["IntroOccuBook.pdf"],
+"toc": {
+"collapse": "subsection"
+},
+"info": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
