@@ -1,6 +1,6 @@
-# Empacando todo en una función {#function1}
+# Packing everything into a function {#function1}
 
-Podría ser de mucha utilidad empacar todo lo que hemos hecho en una sola función que nos permita hacer lo mismo muchas veces repetidamente. Esto hará que podamos diseñar simulaciones de una forma más concisa y flexible y hace más transparente la generación de parámetros usados para generar datos. Asi que vamos a definir una función (que llamaremos data.fn) para generar el mismo tipo de datos que acabamos de crear, asignando argumentos a la función, tales como tamaño de la muestra, efectos de las covariables y direcciones y magnitudes de la interacción de los términos del error de detección y ocupación. Esto hará que nuestro código sea más flexible y eficiente.  
+It could be very useful to pack everything we've done into a single function that allows us to do the same thing many times over and over again. This will allow us to design simulations in a more concise and flexible way and makes the generation of parameters used to generate data more transparent. So let's define a function (which we'll call data.fn) to generate the same data type we just created, assigning arguments to the function, such as sample size, covariate effects, and interaction directions and magnitudes. of the detection error and occupancy terms. This will make our code more flexible and efficient. 
 
 ```{r fun, warning=FALSE}
 ###############################
@@ -102,7 +102,7 @@ return(list(M = M, J = J, mean.occupancy = mean.occupancy,
 
 ```
 
-Una vez que hayamos definido la función y ejecutado su código, podremos llamarla repetidamente y enviar los resultados a la pantalla o asignarlos a un objeto en R. De forma tal que podamos usar el set de datos almacenado en el objeto para un análisis detallado.
+Once we have defined the function and executed its code, we can call it repeatedly and output the results to the screen or assign them to an object in R. So that we can use the dataset stored in the object for detailed analysis.
 
 ```{r fun_call1, eval=FALSE, warning=FALSE}
 # Run this part line by line, taking note of the meaning of the 
@@ -130,12 +130,10 @@ objeto1 <- data.fn(M = 30, J = 10, mean.occupancy = 0.5,
 ```
 
 
-Tal vez el uso más sencillo posible para esta función es experimentar de primera mano el error de muestreo: el cuál es la variabilidad natural de realizaciones repetidas (varios sets de datos) de nuestro proceso estocástico por el cual calculamos los set de datos. Vamos a simular 10.000 sets de datos del venado para ver como varían en términos del verdadero número de sitios ocupados (sumZ en el código) y el número de sitios en los que los venados fueron observados al menos una vez. Tenga en cuenta que los datos generados en las 10.000 tienen los parámetros por defecto en los parámetros mean.occupancy y mean.detection.  
+Perhaps the simplest possible use for this function is to experience the sampling error by firsthand: which is the natural variability from repeated runs (several data sets) of our stochastic process by which we compute the data sets. We are going to simulate 10,000 tapir data sets to see how they vary in terms of the true number of occupied sites (sumZ in the code) and the number of sites where tapirs were observed at least once. Note that the data generated in the 10,000 has default parameters in the mean.occupancy and mean.detection parameters.
 
 
-
-
-```{r fig7, cache=TRUE, fig.cap="Variabilidad natural (error de muestreo) del verdadero número de sitios ocupados (ordenados por tamaño) en color rojo y el número observado de sitios ocupados (en azul). El número de sitios observados/total también se conoce como la ocupación ingenua o (naïve) de la ocurrencia de los venados en 60 sitios en la simulación. El ancho del área azul representa el error inducido por la detección imperfecta. Note la importancia de tener en cuenta este error para tener una mejor idea de la ocupación.", fig.scap="fig7", warning=FALSE, message=FALSE, fig.show='asis'}
+```{r fig7, cache=TRUE, fig.cap="Natural variability (sampling error) of the true number of occupied sites (ordered by size) in red and the observed number of occupied sites (in blue). The number of sites observed/total is also known as the naïve occupancy of deer occurrence at 60 sites in the simulation. The width of the blue area represents the error induced by imperfect detection. Note the importance of taking this error into account to get a better idea of the occupation.", fig.scap="fig7", warning=FALSE, message=FALSE, fig.show='asis'}
 
 
 simrep <- 10000
@@ -154,10 +152,11 @@ points(obsSumZ[order(trueSumZ)], col = "blue")
 ```
 
 
-Como ejercicio, cambie el código para generar otras vez las 10.000 simulaciones con una detección media (mean.detection =0.5), alta (mean.detection =0.8),  y perfecta (mean.detection =1). Compare las gráficas resultantes. 
+As an exercise, change the code to again generate the 10,000 simulations with medium (mean.detection =0.5), high (mean.detection =0.8), and perfect detection (mean.detection =1). Compare the resulting graphs.
 
 
-Ahora podemos usar esta función para generar datos bajo diferentes esquemas de muestreo, variando el número de sitios y el número de muestreos repetidos. Así como también bajo diferentes características ecológicas y de detección, y considerando  posibles interacciones entre covariables. 
+Now we can use this function to generate data under different sampling schemes, varying the number of sites and the number of repeated samples. As well as under different ecological and detection characteristics, and considering possible interactions between covariates.
+
 
 ```{r fun_call3, eval=FALSE}
 # Run this part line by line, taking note of the meaning of the 
@@ -196,7 +195,7 @@ data.fn(M = 267, J = 5, mean.occupancy = 0.6, beta1 = 0, beta2 = 0, beta3 = 0,
 ```
 
 
-> **FELICITACIONES!!!, si llego hasta acá, y si entendió la simulación de datos y su procedimiento, entonces Ud. entendió totalmente el modelo básico de ocupación, el cual es la piedra angular del muestreo y monitoreo biológico moderno.**  
+> **CONGRATULATIONS!!!, if you got this far, and if you understood the data simulation and its procedure, then you fully understood the basic occupancy model, which is the cornerstone of modern biological sampling and monitoring.**  
 
 
 ![](https://media.giphy.com/media/fxsqOYnIMEefC/giphy.gif)

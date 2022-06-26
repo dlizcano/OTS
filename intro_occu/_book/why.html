@@ -4,36 +4,38 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Capítulo 3 Por qué simular? | Simulación y análisis de ocupación</title>
+  <title>Chapter2 Why to do simulations? | Occupancy simulation and analysis</title>
   <meta name="description" content="This is an R example to get occupancy data and analize it." />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Capítulo 3 Por qué simular? | Simulación y análisis de ocupación" />
+  <meta property="og:title" content="Chapter2 Why to do simulations? | Occupancy simulation and analysis" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:image" content="images/venado_large.png" />
+  <meta property="og:image" content="/images/venado_large.png" />
   <meta property="og:description" content="This is an R example to get occupancy data and analize it." />
-  <meta name="github-repo" content="dlizcano/IntroOccuBook" />
+  <meta name="github-repo" content="dlizcano/OTS" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Capítulo 3 Por qué simular? | Simulación y análisis de ocupación" />
+  <meta name="twitter:title" content="Chapter2 Why to do simulations? | Occupancy simulation and analysis" />
   
   <meta name="twitter:description" content="This is an R example to get occupancy data and analize it." />
-  <meta name="twitter:image" content="images/venado_large.png" />
+  <meta name="twitter:image" content="/images/venado_large.png" />
 
 <meta name="author" content="Diego J. Lizcano, Ph.D." />
 
 
-<meta name="date" content="2020-04-20" />
+<meta name="date" content="2022-06-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-<link rel="prev" href="intro.html"/>
+<link rel="prev" href="index.html"/>
 <link rel="next" href="occu.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,29 +51,33 @@
 
 
 
-
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -80,9 +86,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -115,6 +121,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -128,42 +157,50 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">Simulaciones y análisis de ocupación</a></li>
+<li><a href="./">Occupancy simulation and analysis</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisitos</a></li>
-<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introducción</a></li>
-<li class="chapter" data-level="3" data-path="why.html"><a href="why.html"><i class="fa fa-check"></i><b>3</b> Por qué simular?</a><ul>
-<li class="chapter" data-level="3.1" data-path="why.html"><a href="why.html#por-qué-son-útiles-las-simulaciones"><i class="fa fa-check"></i><b>3.1</b> por qué son útiles las simulaciones:</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#please-cite-this-work-as"><i class="fa fa-check"></i><b>1.1</b> Please cite this work as:<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="occu.html"><a href="occu.html"><i class="fa fa-check"></i><b>4</b> La ocupación de hábitat</a></li>
-<li class="chapter" data-level="5" data-path="example.html"><a href="example.html"><i class="fa fa-check"></i><b>5</b> Nuestro ejemplo:</a><ul>
-<li class="chapter" data-level="5.0.1" data-path="example.html"><a href="example.html#modelo-ecológico"><i class="fa fa-check"></i><b>5.0.1</b> Modelo Ecológico:</a></li>
-<li class="chapter" data-level="5.0.2" data-path="example.html"><a href="example.html#modelo-de-observación"><i class="fa fa-check"></i><b>5.0.2</b> Modelo de Observación:</a></li>
-<li class="chapter" data-level="5.1" data-path="example.html"><a href="example.html#pasos-iniciales-tamaño-de-la-muestra-y-valores-de-las-co-variables"><i class="fa fa-check"></i><b>5.1</b> Pasos iniciales: tamaño de la muestra y valores de las co-variables</a></li>
-<li class="chapter" data-level="5.2" data-path="example.html"><a href="example.html#simulando-el-proceso-ecológico-y-su-resultado-la-ocurrencia-del-venado"><i class="fa fa-check"></i><b>5.2</b> Simulando el proceso ecológico y su resultado: la ocurrencia del venado</a><ul>
-<li class="chapter" data-level="5.2.1" data-path="example.html"><a href="example.html#por-qué-bernoulli"><i class="fa fa-check"></i><b>5.2.1</b> Por qué Bernoulli?</a></li>
+<li class="chapter" data-level="2" data-path="why.html"><a href="why.html"><i class="fa fa-check"></i><b>2</b> Why to do simulations?<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="why.html"><a href="why.html#why-simulations-are-useful"><i class="fa fa-check"></i><b>2.1</b> why simulations are useful:<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="example.html"><a href="example.html#simulando-el-proceso-de-observación-y-su-resultado-la-detección"><i class="fa fa-check"></i><b>5.3</b> Simulando el proceso de observación y su resultado: la detección</a><ul>
-<li class="chapter" data-level="5.3.1" data-path="example.html"><a href="example.html#uniendo-los-dos-procesos-el-ecológico-y-el-de-observación"><i class="fa fa-check"></i><b>5.3.1</b> Uniendo los dos procesos el ecológico y el de observación</a></li>
+<li class="chapter" data-level="3" data-path="occu.html"><a href="occu.html"><i class="fa fa-check"></i><b>3</b> The Occupancy<span></span></a></li>
+<li class="chapter" data-level="4" data-path="example.html"><a href="example.html"><i class="fa fa-check"></i><b>4</b> Our Example:<span></span></a>
+<ul>
+<li class="chapter" data-level="4.0.1" data-path="example.html"><a href="example.html#ecological-model"><i class="fa fa-check"></i><b>4.0.1</b> Ecological Model:<span></span></a></li>
+<li class="chapter" data-level="4.0.2" data-path="example.html"><a href="example.html#observation-model"><i class="fa fa-check"></i><b>4.0.2</b> Observation Model:<span></span></a></li>
+<li class="chapter" data-level="4.1" data-path="example.html"><a href="example.html#initial-steps-sample-size-and-covariate-values"><i class="fa fa-check"></i><b>4.1</b> Initial steps: sample size and covariate values<span></span></a></li>
+<li class="chapter" data-level="4.2" data-path="example.html"><a href="example.html#simulating-the-ecological-process-and-its-result-the-occurrence-of-the-tapir"><i class="fa fa-check"></i><b>4.2</b> Simulating the ecological process and its result: the occurrence of The Tapir<span></span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="example.html"><a href="example.html#why-bernoulli"><i class="fa fa-check"></i><b>4.2.1</b> Why Bernoulli?<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="example.html"><a href="example.html#simulating-the-observation-process-and-its-result-the-detection"><i class="fa fa-check"></i><b>4.3</b> Simulating the observation process and its result: the detection<span></span></a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="example.html"><a href="example.html#uniting-the-two-processes-the-ecological-and-the-observation"><i class="fa fa-check"></i><b>4.3.1</b> Uniting the two processes the ecological and the observation<span></span></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="function1.html"><a href="function1.html"><i class="fa fa-check"></i><b>6</b> Empacando todo en una función</a></li>
-<li class="chapter" data-level="7" data-path="unmarked.html"><a href="unmarked.html"><i class="fa fa-check"></i><b>7</b> Análisis de ocupación, metodo ML</a><ul>
-<li class="chapter" data-level="7.0.1" data-path="unmarked.html"><a href="unmarked.html#limpiando-la-memoria-de-r"><i class="fa fa-check"></i><b>7.0.1</b> Limpiando la memoria de R</a></li>
-<li class="chapter" data-level="7.1" data-path="unmarked.html"><a href="unmarked.html#generando-los-datos"><i class="fa fa-check"></i><b>7.1</b> Generando los datos</a></li>
-<li class="chapter" data-level="7.2" data-path="unmarked.html"><a href="unmarked.html#poniendo-los-datos-en-unmarked"><i class="fa fa-check"></i><b>7.2</b> Poniendo los datos en unmarked</a></li>
-<li class="chapter" data-level="7.3" data-path="unmarked.html"><a href="unmarked.html#ajustando-los-modelos"><i class="fa fa-check"></i><b>7.3</b> Ajustando los modelos</a></li>
-<li class="chapter" data-level="7.4" data-path="unmarked.html"><a href="unmarked.html#selección-de-modelos"><i class="fa fa-check"></i><b>7.4</b> Selección de modelos</a></li>
-<li class="chapter" data-level="7.5" data-path="unmarked.html"><a href="unmarked.html#predicción-en-graficas"><i class="fa fa-check"></i><b>7.5</b> Predicción en graficas</a></li>
-<li class="chapter" data-level="7.6" data-path="unmarked.html"><a href="unmarked.html#predicción-espacialmente-explicita"><i class="fa fa-check"></i><b>7.6</b> Predicción espacialmente explicita</a></li>
+<li class="chapter" data-level="5" data-path="function1.html"><a href="function1.html"><i class="fa fa-check"></i><b>5</b> Empacando todo en una función<span></span></a></li>
+<li class="chapter" data-level="6" data-path="unmarked.html"><a href="unmarked.html"><i class="fa fa-check"></i><b>6</b> Análisis de ocupación, metodo ML<span></span></a>
+<ul>
+<li class="chapter" data-level="6.0.1" data-path="unmarked.html"><a href="unmarked.html#limpiando-la-memoria-de-r"><i class="fa fa-check"></i><b>6.0.1</b> Limpiando la memoria de R<span></span></a></li>
+<li class="chapter" data-level="6.1" data-path="unmarked.html"><a href="unmarked.html#generando-los-datos"><i class="fa fa-check"></i><b>6.1</b> Generando los datos<span></span></a></li>
+<li class="chapter" data-level="6.2" data-path="unmarked.html"><a href="unmarked.html#poniendo-los-datos-en-unmarked"><i class="fa fa-check"></i><b>6.2</b> Poniendo los datos en unmarked<span></span></a></li>
+<li class="chapter" data-level="6.3" data-path="unmarked.html"><a href="unmarked.html#ajustando-los-modelos"><i class="fa fa-check"></i><b>6.3</b> Ajustando los modelos<span></span></a></li>
+<li class="chapter" data-level="6.4" data-path="unmarked.html"><a href="unmarked.html#selección-de-modelos"><i class="fa fa-check"></i><b>6.4</b> Selección de modelos<span></span></a></li>
+<li class="chapter" data-level="6.5" data-path="unmarked.html"><a href="unmarked.html#predicción-en-graficas"><i class="fa fa-check"></i><b>6.5</b> Predicción en graficas<span></span></a></li>
+<li class="chapter" data-level="6.6" data-path="unmarked.html"><a href="unmarked.html#predicción-espacialmente-explicita"><i class="fa fa-check"></i><b>6.6</b> Predicción espacialmente explicita<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="bayesian.html"><a href="bayesian.html"><i class="fa fa-check"></i><b>8</b> Análisis Bayesiano</a><ul>
-<li class="chapter" data-level="8.1" data-path="bayesian.html"><a href="bayesian.html#generando-los-datos-1"><i class="fa fa-check"></i><b>8.1</b> Generando los datos</a></li>
-<li class="chapter" data-level="8.2" data-path="bayesian.html"><a href="bayesian.html#comparando-los-valores-reales-y-los-estimados-de-ml-y-bayesiano"><i class="fa fa-check"></i><b>8.2</b> Comparando los valores reales y los estimados de ML y Bayesiano</a></li>
+<li class="chapter" data-level="7" data-path="bayesian.html"><a href="bayesian.html"><i class="fa fa-check"></i><b>7</b> Análisis Bayesiano<span></span></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="bayesian.html"><a href="bayesian.html#generando-los-datos-1"><i class="fa fa-check"></i><b>7.1</b> Generando los datos<span></span></a></li>
+<li class="chapter" data-level="7.2" data-path="bayesian.html"><a href="bayesian.html#comparando-los-valores-reales-y-los-estimados-de-ml-y-bayesiano"><i class="fa fa-check"></i><b>7.2</b> Comparando los valores reales y los estimados de ML y Bayesiano<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="información-de-la-sesión-de-r-y-los-paquetes-usados.html"><a href="información-de-la-sesión-de-r-y-los-paquetes-usados.html"><i class="fa fa-check"></i><b>9</b> Información de la sesión de R y los paquetes usados</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="8" data-path="información-de-la-sesión-de-r-y-los-paquetes-usados.html"><a href="información-de-la-sesión-de-r-y-los-paquetes-usados.html"><i class="fa fa-check"></i><b>8</b> Información de la sesión de R y los paquetes usados<span></span></a></li>
+<li><a href="references.html#references">References<span></span></a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/dlizcano/IntroOccuBook" target="_blank">Publicado con bookdown</a></li>
 
@@ -176,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Simulación y análisis de ocupación</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Occupancy simulation and analysis</a>
           </h1>
         </div>
 
@@ -184,20 +221,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="why" class="section level1">
-<h1><span class="header-section-number">Capítulo 3</span> Por qué simular?</h1>
-<div id="por-qué-son-útiles-las-simulaciones" class="section level2">
-<h2><span class="header-section-number">3.1</span> por qué son útiles las simulaciones:</h2>
+<div id="why" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter2</span> Why to do simulations?<a href="why.html#why" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="why-simulations-are-useful" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> why simulations are useful:<a href="why.html#why-simulations-are-useful" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li>Al hacer simulaciones se conocen los parámetros verdaderos, así que podremos asegurarnos que el código que ejecutamos (R o BUGS) estima lo que queremos, y que los estimados son iguales o se acercan a los parámetros verdaderos, permitiendo depurar errores en el código.</li>
-<li>Podemos calibrar un modelo derivado y/o más complejo más fácilmente. Las simulaciones pueden ser vistas como un experimento controlado, o como versiones simplificadas de un sistema real, en el cual podemos probar como varían ciertos parámetros que afectan los estimados de otros parámetros. Realizar experimentos controlados en el mundo real es muchas veces impráctico o imposible en ecología, así que la simulación es la forma más coherente de estudiar el sistema ecológico.</li>
-<li>Se experimenta de primera mano el error de muestreo y se convierte en un fantástico proceso de aprendizaje.</li>
-<li>Podemos verificar la calidad (frecuentista) de los estimados, así como la precisión y el efecto del tamaño muestreal, computando la diferencia entre la media del estimado y el valor real (sesgo) y la varianza del estimado (la precisión).</li>
-<li>Es la forma más flexible y directa de realizar un análisis de poder, resolviendo el gran problema de determinar el tamaño de la muestra necesario para detectar un efecto de cierta magnitud, con una probabilidad dada.<br />
-</li>
-<li>Podemos visualizar que tan identificables son los parámetros en modelos más complejos.</li>
-<li>Podemos verificar que tan robusto es el modelo a violaciones de lo que se asume.</li>
-<li>Al ser capaces de simular datos bajo cierto modelo, se garantiza que uno entiende el modelo, sus restricciones y limitaciones.</li>
+<li>When doing simulations, the true parameters are known, so we can ensure that the code we execute (R or BUGS) estimates what we want, and that the estimates are equal to or close to the true parameters, allowing us to debug errors in the code.</li>
+<li>We can calibrate a derived and/or more complex model more easily. Simulations can be viewed as a controlled experiment, or as simplified versions of a real system, in which we can test how certain parameters vary and affect estimates of other parameters. Conducting controlled experiments in the real world is often impractical or impossible in ecology, so simulation is the most consistent way to study the ecological system.</li>
+<li>Sampling error is experienced firsthand and becomes a fantastic learning process.</li>
+<li>We can check the quality (frequentist) of the estimates, as well as the precision and the effect of sample size, by computing the difference between the mean of the estimate and the true value (bias) and the variance of the estimates (the precision).</li>
+<li>It is the most flexible and direct way to carry out power analysis, solving the great problem of determining the sample size necessary to detect an effect of a certain magnitude, with a given probability.</li>
+<li>We can visualize how identifiable the parameters are in more complex models.</li>
+<li>We can check how robust the model is to violations of the assumptions.</li>
+<li>Being able to simulate data under a particular model ensures that one understands the model, its constraints, and limitations.</li>
 </ol>
 
 </div>
@@ -207,12 +243,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="occu.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -231,6 +266,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -251,6 +287,10 @@ gitbook.start({
 "text": null
 },
 "download": ["IntroOccuBook.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 },

@@ -1,4 +1,4 @@
-# Información de la sesión de R y los paquetes usados
+# R session information and packages used
 
 ```{r sesion_info, cache=TRUE}
 sessionInfo()

@@ -3,7 +3,7 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="./">Simulaciones y análisis de ocupación</a></li>
+        <li><a href="./">Occupancy simulation and analysis</a></li>
       after: |
         <li><a href="https://github.com/dlizcano/IntroOccuBook" target="_blank">Publicado con bookdown</a></li>
     edit: https://github.com/dlizcano/IntroOccuBook/edit/master/%s

@@ -1,11 +1,11 @@
-# Análisis Bayesiano {#bayesian}
+# Bayesian analysis {#bayesian}
 
-En esta parte vamos a estimar los mismos parámetros de un modelo igual al "mejor modelo" el cual fue seleccionado en el procedimiento de selección de modelos de unmarked en el capitulo anterior. Recordemos que este modelo tiene beta1 y alpha1, alpha2, alpha3. Los parámetros que estimaremos con el método Bayesiano los vamos a comparar con los parámetros que ya estimamos con ML en unmarked y también los compararemos con los parámetros reales que definimos al establecer los datos (datos2) con la función data.fn, para ver cual de los dos métodos de estimación (ML o Bayesiano) se acerca más a los parámetros reales. 
+In this part we are going to estimate the same parameters of a model equal to the "best model" which was selected in the unmarked model selection procedure in the previous chapter. Recall that this model has beta1 and alpha1, alpha2, alpha3. The parameters that we will estimate with the Bayesian method are going to be compared with the parameters that we already estimated with ML in unmarked and we will also compare them with the real parameters that we defined when establishing the data (data2) with the function data.fn, to see which of the two estimation methods (ML or Bayesian) are closer to the real parameters.
  
 
-## Generando los datos
+## Generating the data
 
-De nuevo usaremos un diseño tipo TEAM (http://www.teamnetwork.org) con 60 sitios de muestreo y 30 visitas repetidas, que equivalen a los 30 días en que las camaras permenecen activas en campo. Nuestra especie sigue siendo la misma, el venado de cola blanca. Para este ejemplo asumiremos que la detección es 0.6, la ocupacion 0.8 y las interacciones son sencillas con la altitud como la unica covariable que explica la ocupación. Pero para la deteccion hay una relación más compleja, asumiendo que hay una leve interacción entre las covariables de la observación. Para la observación la altitud y temperatura interactuan entre si. Tambien observe como la altitud influye en direcciones opuestas con un signo positivo en la altitud para la detección y negativo para la ocupación. 
+Again we will use a TEAM-type design (https://www.wildlifeinsights.org/team-network) with 60 sampling sites and 30 repeated visits, which is equivalent to the 30 days that the cameras remain active in the field. Our species remains the same, the white-tailed deer. For this example we will assume that detection is 0.6, occupancy is 0.8, and the interactions are simple with altitude as the only covariate explaining occupancy. But for detection there is a more complex relationship, assuming there is a slight interaction between the observation covariates. For observation, altitude and temperature interact with each other. Also note how altitude influences in opposite directions with a positive altitude sign for detection and a negative sign for occupancy. 
 
 
 ```{r fun_ch7, warning=FALSE, echo=FALSE, message=FALSE}
@@ -259,7 +259,7 @@ ggs_running(bayes.mod.fit.gg)# check if chains approach target distrib.
 # traplot(fit22.mcmc)
 # ggs_density(bayes.mod.fit.gg)
 
-xyplot(out22)        # assess within-chain convergence
+# xyplot(out22)        # assess within-chain convergence
 densityplot(out22)  # shape of the posterior distribution
 # see model result and estimates  
 print(out22, 3)
@@ -284,10 +284,9 @@ real<- rbind(datos2$mean.occupancy, datos2$beta1, datos2$mean.detection,
 
 ```
 
-## Comparando los valores reales y los estimados de ML y Bayesiano
+## Comparing the actual and estimated values from ML and Bayesian
 
-Veamos qué tan cerca están los estimados de los valores reales, comparando el valor real con el estimado de Máxima Verosimilitud (columnas 2 y 3) y el estimado Bayesiano (columnas 4 y 5).  
-
+Let's see how close the estimates are to the actual values, by comparing the actual value with the Maximum Likelihood estimate (columns 2 and 3) and the Bayesian estimate (columns 4 and 5).
 
 ```{r print_estim, eval=TRUE, cache=TRUE, warning=FALSE}
 ### see if the values are close to real values
@@ -301,4 +300,42 @@ kable(compare)
 
 ```
 
+## Bayesian estimates easily
+
+The JAGS code adds another layer of complexity to the analysis. Fortunately, since the year 2022, there is a new package in the neighborhood. The [ubms package](https://kenkellner.com/ubms/) allows Bayesian estimates using the same easy and simple unmarked structure. The package has a formula-based interface compatible with unmarked, but the model is fit using MCMC with Stan instead of using maximum likelihood. 
+
+```{r ubms_umf1_ch7, cache=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+
+library(ubms)
+
+(fm7_ubms <- stan_occu(~ elev + temp + elev:temp ~ elev, umf, chains=3, cores=3))
+
+# Assess model goodness-of-fit with a posterior predictive check, using the MacKenzie-Bailey chi-square test:
+fm_fit <- gof(fm7_ubms, draws=500)
+plot(fm_fit)
+
+# Look at the marginal effect of on detection:
+
+plot_effects(fm7_ubms, "det")
+
+# Look at the marginal effect of on Occupancy:
+
+plot_effects(fm7_ubms, "state")
+
+```
+Advantages of ubms compared to unmarked:
+
+1. Obtain posterior distributions of parameters and derived parameters.
+
+2. Include random effects in parameter formulas (same syntax as lme4).
+
+3. Assess model fit using WAIC and LOO via the loo package.
+
+Disadvantages compared to unmarked:
+
+1. MCMC is slower than maximum likelihood.
+
+2. Not all model types are supported.
+
+3. Potential for convergence issues
 

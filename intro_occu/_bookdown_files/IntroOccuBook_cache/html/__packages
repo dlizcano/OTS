@@ -1,4 +1,3 @@
-base
 bookdown
 knitr
 lattice
@@ -17,3 +16,7 @@ dplyr
 tidyr
 ggplot2
 ggmcmc
+spatstat.geom
+spatstat.core
+spatstat.linnet
+ubms

@@ -1,24 +1,23 @@
-# Análisis de ocupación, metodo ML {#unmarked}
+# Occupancy analysis, ML method {#unmarked}
 
-Ya que hemos entendido como funcionan e interactúan los dos procesos; el ecológico y el observacional para producir los datos de ocupación. Luego de generar varios sets de datos, ahora solo nos resta analizarlos. La forma más directa e intuitiva es usar la función occu del paquete unmarked [@Fiske2011]. Posteriormente podremos usar un modelo de tipo bayesiano en el lenguaje BUGS para analizar los mismos datos y al final comparar cuál de los dos estimadores, Máxima Verosimilitud o Bayesiano, se acerca más a los parámetros verdaderos.   
+Now that we have understood how the two processes work and interact; the ecological and the observational to produce the occupation data. After generating several data sets, now we only have to analyze them. The most direct and intuitive way is to use the occu function from the unmarked [@Fiske2011] package. Later we can use a Bayesian type model in the BUGS language to analyze the same data and in the end compare which of the two estimators, Maximum Likelihood or Bayesian, is closer to the true parameters.
 
-### Limpiando la memoria de R
+### Clearing R memory
 
-Antes de continuar, y como ya hemos generado una gran cantidad de datos y modelos en los pasos previos, vamos a borrar la memoria de R antes de comenzar. Esto  lo hacemos con el comando:
-
+Before we continue, and since we have already generated a large amount of data and models in the previous steps, we are going to clear the memory of R before we begin. We do this with the command:
 
 ```{r clear_WS, eval=FALSE, warning=FALSE}
 rm(list = ls())
 
 ```
 
-Una vez hayamos hecho esto debemos volver a correr el código de la función que genera los datos que hemos creado el Capítulo \@ref(function1).
+Once we have done this we must re-run the code of the function that generates the data that we have created in Chapter \@ref(function1).
 
-Despues de haber cargado la funcion nuevamente debemos volver a 
+After having loaded the function again we must return to
 
-## Generando los datos
+## Generating the data
 
-Esta vez recurriremos a un diseño tipo TEAM (http://www.teamnetwork.org) con 60 sitios de muestreo y 30 visitas repetidas, que equivalen a los 30 días en que las cámaras permanecen activas en campo. De nuevo nuestra especie es el venado de cola blanca. Para este ejemplo asumiremos que la detección es 0.6, la ocupación 0.8 y las interacciones son mucho más sencillas con la altitud como la única covariable que explica la ocupación. Sin embargo para la detección hay una relación más compleja, asumiendo que hay una leve interacción entre las covariables de la observación. Para la observación la altitud y temperatura interactúan entre sí. También observe como la altitud influye en direcciones opuestas con un signo positivo en la altitud para la detección y negativo para la ocupación.
+This time we will use a TEAM-type design (https://www.wildlifeinsights.org/team-network) with 60 sampling sites and 30 repeated visits, which is equivalent to the 30 days that the cameras remain active in the field. Again our species is the white-tailed tapir. For this example we will assume that detection is 0.6, occupancy is 0.8, and the interactions are much simpler with elevation as the only covariate explaining occupancy. However, for detection there is a more complex relationship, assuming that there is a slight interaction between the observation covariates. For observation, elevation and temperature interact with each other. Also, note how elevation influences in opposite directions with a positive sign at elevation for detection and negative for occupancy.
 
 
 ```{r fun_ch2, warning=FALSE, echo=FALSE, message=FALSE}
@@ -172,9 +171,9 @@ attach(datos2)         # Make objects inside of 'datos2' accessible directly
 
 ```
 
-## Poniendo los datos en unmarked
+## Putting the data in unmarked
 
-[Unmarked](http://cran.r-project.org/web/packages/unmarked/index.html) es el paquete de R que usamos para analizar los datos de ocupación [@Fiske2011]. Para lograr esto debemos primero preparar los datos y juntarlos en un objeto de tipo unmarkedFrame. En este caso usamos la función unmarkedFrameOccu que es específica para análisis de ocupación de una sola época o estación. Más sobre unkarked en: https://sites.google.com/site/unmarkedinfo/home
+[Unmarked](http://cran.r-project.org/web/packages/unmarked/index.html) is the R package we use to analyze the [@Fiske2011] occupancy data. To achieve this we must first prepare the data and collect it in an object of type unmarkedFrame. In this case we use the unmarkedFrameOccu function, which is specific for occupancy analysis of a single season or season. More about unmarked at: https://sites.google.com/site/unmarkedinfo/home
 
 ```{r unmark_umf1, cache=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 
@@ -192,7 +191,7 @@ attach(datos2)
 
 library(unmarked)
 siteCovs <- as.data.frame(cbind(forest,elev)) # occupancy covariates 
-obselev<-matrix(rep(elev,J),ncol = J) # make elevetion per observation
+obselev<-matrix(rep(elev,J),ncol = J) # make elevation per observation
 obsCovs <- list(temp= temp,elev=obselev) # detection covariates
 
 # umf is the object joining observations (y), occupancy covariates (siteCovs)
@@ -204,18 +203,18 @@ umf <- unmarkedFrameOccu(y = y, siteCovs = siteCovs, obsCovs = obsCovs)
 ```
 
 
-El paquete unmarked nos permite ver gráficamente como están dispuestos los datos en los sitios de muestreo con la función plot.
+The unmarked package allows us to graphically see how the data is arranged at the sampling sites with the plot function.
 
 ```{r umfplot, cache=TRUE, fig.cap="Inspección grafica del objeto umf.", fig.scap="fig"}
 plot (umf)
 ```
 
 
-## Ajustando los modelos
+## Fitting the models
 
-El siguiente paso es ajustar los modelos que se requerían variando las co-variables. Esto se logra con la [función occu()](http://www.rdocumentation.org/packages/unmarked/versions/0.11-0/topics/occu).
+The next step is to fit the models that were required by varying the covariates. This is accomplished with the [occu() function](http://www.rdocumentation.org/packages/unmarked/versions/0.11-0/topics/occu).
 
-Tenga en cuenta que en el proceso de construcción de modelos su modelo debe tener un significado biológico. 
+Keep in mind that in the model building process your models must have a biological meaning.
 
 
 ```{r occu1, cache=TRUE, dependson=c(-1,-2), cache=TRUE, warning=FALSE, message=FALSE}
@@ -232,9 +231,9 @@ fm8 <- occu(~ elev + temp + elev:temp ~ forest, umf)
 ```
 
 
-## Selección de modelos
+## Model Selection
 
-Unmarked permite hacer selección de modelos basándose en el AIC de cada uno. De forma tal que el menor AIC es el modelo más parsimonioso de acuerdo a nuestros datos [@Burnham2004]. 
+Unmarked allows you to perform a model selection procedure to select models based on the Akaike information Criterium (AIC) of each one. So the lowest AIC is the most parsimonious model according to our data [@Burnham2004].
 
 
 ```{r modelsel, cache=TRUE}
@@ -254,14 +253,14 @@ modSel(models) # model selection procedure
 ```
 
 
-## Predicción en graficas 
+## Prediction in graphs
 
-El modelo con menor AIC puede ser usado para predecir resultados esperados de acuerdo a un nuevo set de datos. Por ejemplo, uno podría preguntar la abundancia de venados que se espera encontrar en un sitio con mayor altitud. Las predicciones también son otra forma de presentar los resultados de un análisis.  Aquí ilustraremos como se ve la predicción de $\psi$ y _p_ sobre el rango de las covariables estudiadas. Note que estamos usando covariables estandarizadas. Si estuviéramos usando covariables en su escala real, tendríamos que tener en cuenta que hay que transformarlas usando la media y la desviación estándar. 
+The model with the lowest AIC can be used to predict expected results according to a new data set. For example, one might ask the expected abundance of deer at a higher elevation site. Predictions are also another way of presenting the results of an analysis. Here we will illustrate what the prediction of $\psi$ and _p_ looks like over the range of covariates studied. Note that we are using standardized covariates. If we were using covariates at their real scale, we would have to take into account that they have to be transformed using the mean and standard deviation.
 
-Antes de usar el modelo para predecir es buena idea verificar los parámetros del modelo y sus errores, posteriormente verificar gráficamente que el modelo ajusta bien con la función parboot, la cual hace un remuestreo del modelo.  Esta grafica se interpreta como que el modelo tiene buen ajuste, cuando la media (línea punteada) está entre los intervalos del histograma. Si la línea se encuentra muy lejos del histograma el modelo no podría ser bueno para predecir.
+Before using the model to predict it is a good idea to check the model parameters and their errors, then check graphically that the model fits well with the parboot function, which does a resampling of the model. This plot is interpreted as the model having a good fit, when the mean (dotted line) is between the intervals of the histogram. If the line is too far from the histogram the model might not be good at predicting.
 
 
-```{r fit1, cache=TRUE,  fig.cap="Evaluación grafica del ajuste del modelo fm7.", fig.scap="fig", warning=FALSE, message=FALSE, fig.show='hold', fig.height=4}
+```{r fit1, cache=TRUE,  fig.cap="Graphical evaluation of the model fit fm7.", fig.scap="fig", warning=FALSE, message=FALSE, fig.show='hold', fig.height=4}
 summary(fm7) # see the model parameters
 pb <- parboot(fm7, nsim=250, report=10) # goodness of fit
 plot (pb) # plot goodness of fit
@@ -269,9 +268,9 @@ plot (pb) # plot goodness of fit
 ```
 
 
-Ahora que sabemos que nuestro mejor modelo tiene buen ajuste, podemos usarlo para predecir la ocupación en el rango de la altitud para ver su comportamiento en una gráfica.   
+Now that we know that our best model has a good fit, we can use it to predict occupancy in the altitude range to see how it behaves on a graph.
 
-```{r gpsi,  fig.scap="fig.", cache=TRUE, warning=FALSE, message=FALSE,  fig.show='asis', fig.cap="Grafica de la ocupación con respecto a la elevación."}
+```{r gpsi,  fig.scap="fig.", cache=TRUE, warning=FALSE, message=FALSE,  fig.show='asis', fig.cap="Plot of occupancy versus elevation."}
 
 elevrange<-data.frame(elev=seq(min(datos2$elev),max(datos2$elev),length=100)) # newdata
 pred_psi <-predict(fm7,type="state",newdata=elevrange,appendData=TRUE) 
@@ -283,12 +282,11 @@ lines(upper~elev, pred_psi,type="l",col=gray(0.5))
 ```
 
 
-## Predicción espacialmente explicita 
+## Spatially explicit prediction
 
-Podemos también usar el mejor modelo para predecir de forma espacialmente explicita sí tenemos los mapas. Como ilustración vamos a construir mapas simulados para cada una de nuestras covariables. Los mapas surgen de un patrón aleatorio de puntos con distribución Poisson. Luego estos puntos los convertimos en una superficie interpolada.   
- 
+We can also use the best model to predict spatially explicitly if we have the maps. As an illustration we will construct simulated maps for each of our covariates. The maps arise from a random pattern of points with a Poisson distribution. We then convert these points to an interpolated surface.
 
-```{r spat, cache=TRUE, warning=FALSE, message=FALSE, fig.show='asis', fig.cap="Mapa simulado de elevación, bosque y temperatura.", fig.scap="fig"}
+```{r spat, cache=TRUE, warning=FALSE, message=FALSE, fig.show='asis', fig.cap="Simulated map of elevation, forest and temperature.", fig.scap="fig"}
 
 # lets make random maps for the three covariates
 library(raster)
@@ -314,9 +312,9 @@ plot(mapdata.m)
 
 ```
 
-Una vez tenemos nuestros mapas de covariables, los usamos para predecir con el mejor modelo. De esta forma podemos tener un mapa con predicciones de la ocupación y la probabilidad de detección.
+Once we have our covariate maps, we use them to predict with the best model. In this way we can have a map with predictions of the occupancy and the probability of detection.
 
-```{r spatr, cache=TRUE, warning=FALSE, message=FALSE, fig.height=2.5, fig.show='asis', fig.cap="Modelos de ocupación y detección espacialmente explícitos.", fig.scap="fig."}
+```{r spatr, cache=TRUE, warning=FALSE, message=FALSE, fig.height=2.5, fig.show='asis', fig.cap="Spatially explicit detection and occupancy models.", fig.scap="fig."}
 # make the predictions 
 predictions_psi <- predict(fm7, type="state", newdata=mapdata.m) # predict psi
 predictions_p   <- predict(fm7, type="det",   newdata=mapdata.m) # predict p

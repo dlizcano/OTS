@@ -1,5 +1,5 @@
 book_filename: "IntroOccuBook.Rmd"
 repo: https://github.com/dlizcano/IntroOccuBook
-chapter_name: "Capítulo "
+chapter_name: "Chapter"
 before_chapter_script: "before_chapter_script.R"
 delete_merged_file: yes
